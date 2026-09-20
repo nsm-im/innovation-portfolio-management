@@ -107,10 +107,22 @@ export const StatusListPage: React.FC = () => {
     return rawRecords;
   }, [rawRecords, selectedSource]);
 
-  // Available years from entire dataset
+  // Available years for current source
   const availableYears = useMemo(
-    () => [...new Set(rawRecords.map((r) => r.year))].sort(),
-    [rawRecords]
+    () => [...new Set(allRecords.map((r) => r.year))].sort(),
+    [allRecords]
+  );
+
+  // Available portfolios for current source
+  const availablePortfolios = useMemo(
+    () => [...new Set(allRecords.map((r) => r.innovation_management_portfolio).filter(Boolean))].sort(),
+    [allRecords]
+  );
+
+  // Available categories for current source
+  const availableCategories = useMemo(
+    () => [...new Set(allRecords.map((r) => r.innovation_category).filter(Boolean))].sort(),
+    [allRecords]
   );
 
   // Filter records by status AND the selected filters
@@ -190,7 +202,7 @@ export const StatusListPage: React.FC = () => {
       width: "15%",
       render: (portfolio: string) => (
         <Tag
-          color={PORTFOLIO_COLORS[portfolio]}
+          color={PORTFOLIO_COLORS[portfolio] || "#888"}
           style={{ borderRadius: 12, padding: "2px 12px" }}
         >
           {portfolio}
@@ -301,8 +313,7 @@ export const StatusListPage: React.FC = () => {
               style={{ width: 130 }}
               options={[
                 { label: "All", value: "all" },
-                { label: "Core", value: "Core" },
-                { label: "Adjacent", value: "Adjacent" },
+                ...availablePortfolios.map((p) => ({ label: p, value: p })),
               ]}
             />
           </Space>
@@ -314,9 +325,7 @@ export const StatusListPage: React.FC = () => {
               style={{ width: 130 }}
               options={[
                 { label: "All", value: "all" },
-                { label: "Service", value: "Service" },
-                { label: "Product", value: "Product" },
-                { label: "Process", value: "Process" },
+                ...availableCategories.map((c) => ({ label: c, value: c })),
               ]}
             />
           </Space>
