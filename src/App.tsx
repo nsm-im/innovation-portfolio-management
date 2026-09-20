@@ -84,7 +84,7 @@ const ThemedAppContent: React.FC = () => {
 function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <ThemedAppContent />
       </BrowserRouter>
     </ThemeProvider>

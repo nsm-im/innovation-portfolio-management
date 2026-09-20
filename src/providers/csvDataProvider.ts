@@ -53,7 +53,7 @@ function parseCSVText(text: string): string[][] {
 async function fetchTopDown(): Promise<Innovation[]> {
   if (cachedTopDown) return cachedTopDown;
 
-  const response = await fetch("/data/topdown-innovation.csv");
+  const response = await fetch(`${import.meta.env.BASE_URL}data/topdown-innovation.csv`);
   const text = await response.text();
   const rows = parseCSVText(text);
   if (rows.length === 0) return [];
@@ -95,7 +95,7 @@ async function fetchTopDown(): Promise<Innovation[]> {
 async function fetchBottomUp(): Promise<Innovation[]> {
   if (cachedBottomUp) return cachedBottomUp;
 
-  const response = await fetch("/data/bottom-up-innovation.csv");
+  const response = await fetch(`${import.meta.env.BASE_URL}data/bottom-up-innovation.csv`);
   const text = await response.text();
   const rows = parseCSVText(text);
   if (rows.length === 0) return [];
