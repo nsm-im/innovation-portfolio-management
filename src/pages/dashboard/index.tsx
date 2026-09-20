@@ -279,11 +279,20 @@ export const DashboardPage: React.FC = () => {
 
   const summaryCards = [
     {
+      title: "Total Innovations",
+      slug: "all",
+      count: filteredRecords.length,
+      color: token.colorPrimary,
+      icon: "📊",
+      isTotal: true,
+    },
+    {
       title: "In Progress",
       slug: "in-progress",
       count: statusCounts["In Progress"] || 0,
       color: STATUS_COLORS["In Progress"],
       icon: "⚙️",
+      isTotal: false,
     },
     {
       title: "Done",
@@ -291,6 +300,7 @@ export const DashboardPage: React.FC = () => {
       count: statusCounts["Done"] || 0,
       color: STATUS_COLORS["Done"],
       icon: "🚀",
+      isTotal: false,
     },
     {
       title: "Rejected",
@@ -298,6 +308,7 @@ export const DashboardPage: React.FC = () => {
       count: statusCounts["Rejected"] || 0,
       color: STATUS_COLORS["Rejected"],
       icon: "❌",
+      isTotal: false,
     },
   ];
 
@@ -386,16 +397,20 @@ export const DashboardPage: React.FC = () => {
       {/* Summary Cards */}
       <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
         {summaryCards.map((card) => (
-          <Col xs={24} sm={8} md={8} key={card.title}>
+          <Col xs={24} sm={12} md={6} key={card.title}>
             <Card
               hoverable
-              onClick={() => navigate(buildStatusUrl(card.slug))}
+              onClick={() => {
+                if (!card.isTotal) {
+                  navigate(buildStatusUrl(card.slug));
+                }
+              }}
               style={{
                 background: token.colorBgContainer,
                 border: `1px solid ${token.colorBorder}`,
                 borderLeft: `4px solid ${card.color}`,
                 transition: "all 0.3s ease",
-                cursor: "pointer",
+                cursor: card.isTotal ? "default" : "pointer",
               }}
               styles={{
                 body: { padding: "16px 20px" },
