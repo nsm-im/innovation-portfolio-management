@@ -34,7 +34,7 @@ jobs:
               core.setOutput('enabled', 'true');
             } catch (error) {
               if (error.status === 404) {
-                const notice = 'GitHub Pages is not enabled for this repository yet. Enable Settings > Pages with the GitHub Actions source, then rerun this workflow.';
+                const notice = 'GitHub Pages is not enabled for this repository yet. Enable Settings → Pages with the GitHub Actions source, then rerun this workflow.';
                 core.warning(notice);
                 core.setOutput('notice', notice);
                 core.setOutput('enabled', 'false');
