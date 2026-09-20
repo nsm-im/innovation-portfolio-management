@@ -36,16 +36,44 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Check GitHub Pages configuration
+        id: pages-site
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+
+            try {
+              const { data } = await github.rest.repos.getPages({ owner, repo });
+              core.info(`GitHub Pages is configured for ${data.html_url ?? `${owner}/${repo}`}.`);
+              core.setOutput('enabled', 'true');
+            } catch (error) {
+              if (error.status === 404) {
+                core.warning('GitHub Pages is not enabled for this repository yet. Enable Settings > Pages with the GitHub Actions source, then rerun this workflow.');
+                core.setOutput('enabled', 'false');
+                return;
+              }
+
+              throw error;
+            }
+
       - name: Setup Pages
+        if: steps.pages-site.outputs.enabled == 'true'
         uses: actions/configure-pages@v5
         with:
           enablement: true
 
       - name: Upload artifact
+        if: steps.pages-site.outputs.enabled == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
 
+      - name: GitHub Pages setup required
+        if: steps.pages-site.outputs.enabled != 'true'
+        run: echo "::notice::GitHub Pages deployment was skipped because the repository Pages site has not been enabled yet."
+
       - name: Deploy to GitHub Pages
+        if: steps.pages-site.outputs.enabled == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
