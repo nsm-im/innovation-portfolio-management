@@ -474,8 +474,8 @@ export const DashboardPage: React.FC = () => {
           body: { padding: "16px 16px 8px" },
         }}
       >
-        <ResponsiveContainer width="100%" height={320}>
-          <BarChart data={chartData} barCategoryGap="25%">
+        <ResponsiveContainer width="100%" height={260}>
+          <BarChart data={chartData} barCategoryGap="20%" maxBarSize={56}>
             <CartesianGrid
               strokeDasharray="3 3"
               stroke={mode === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)"}
