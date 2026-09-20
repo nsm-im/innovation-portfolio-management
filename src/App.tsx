@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes, Outlet } from "react-router";
 import { ConfigProvider, App as AntdApp } from "antd";
 import { DashboardPage } from "./pages/dashboard";
 import { StatusListPage } from "./pages/status";
+import { MatrixPage } from "./pages/matrix";
 import { csvDataProvider } from "./providers/csvDataProvider";
 import { ThemeProvider, useColorMode } from "./contexts/ThemeContext";
 import { darkTheme, lightTheme } from "./theme/themeConfig";
@@ -25,27 +26,19 @@ const ThemedAppContent: React.FC = () => {
           routerProvider={routerProvider}
           resources={[
             {
-              name: "innovations",
+              name: "overview",
               list: "/",
               meta: {
-                label: " All Innovations",
-                icon: "🌐",
+                label: " Overview",
+                icon: "📊",
               },
             },
             {
-              name: "topdown-innovations",
-              list: "/?source=topdown",
+              name: "matrix",
+              list: "/matrix",
               meta: {
-                label: " Top-Down",
-                icon: "🏛️",
-              },
-            },
-            {
-              name: "bottomup-innovations",
-              list: "/?source=bottomup",
-              meta: {
-                label: " Bottom-Up",
-                icon: "💡",
+                label: " Portfolio Matrix",
+                icon: "🎯",
               },
             },
           ]}
@@ -62,7 +55,7 @@ const ThemedAppContent: React.FC = () => {
                   Title={(props: { collapsed?: boolean }) => (
                     <ThemedTitle
                       collapsed={props.collapsed ?? false}
-                      text="Innovation IM"
+                      text="Innovation PM"
                       icon={<span style={{ fontSize: 22 }}>🚀</span>}
                     />
                   )}
@@ -72,6 +65,7 @@ const ThemedAppContent: React.FC = () => {
               }
             >
               <Route index element={<DashboardPage />} />
+              <Route path="/matrix" element={<MatrixPage />} />
               <Route path="/status/:status" element={<StatusListPage />} />
             </Route>
           </Routes>

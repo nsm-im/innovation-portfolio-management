@@ -20,16 +20,15 @@ export const STATUS_ORDER = [
 ] as const;
 
 export const STATUS_COLORS: Record<string, string> = {
-  "In Progress": "#3b82f6",
-  Done: "#10b981",
-  Rejected: "#ef4444",
+  "In Progress": "rgb(61, 136, 198)",
+  Done: "rgb(86, 177, 141)",
+  Rejected: "rgb(217, 100, 121)",
 };
 
 export const PORTFOLIO_COLORS: Record<string, string> = {
   Core: "#06b6d4",
   Adjacent: "#f97316",
   Transformation: "#a855f7",
-  Tranformation: "#a855f7",
 };
 
 export const CATEGORY_COLORS: Record<string, string> = {

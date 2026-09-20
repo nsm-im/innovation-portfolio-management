@@ -180,21 +180,21 @@ export const DashboardPage: React.FC = () => {
     },
     ...(selectedSource === "all"
       ? [
-          {
-            title: "Source",
-            dataIndex: "source",
-            key: "source",
-            width: "12%",
-            render: (src: string) => (
-              <Tag
-                color={src === "top-down" ? "#e67e22" : "#3b82f6"}
-                style={{ borderRadius: 12, padding: "2px 10px" }}
-              >
-                {src === "top-down" ? "🏛️ Top-Down" : "💡 Bottom-Up"}
-              </Tag>
-            ),
-          },
-        ]
+        {
+          title: "Source",
+          dataIndex: "source",
+          key: "source",
+          width: "12%",
+          render: (src: string) => (
+            <Tag
+              color={src === "top-down" ? "#e67e22" : "#3b82f6"}
+              style={{ borderRadius: 12, padding: "2px 10px" }}
+            >
+              {src === "top-down" ? "🏛️ Top-Down" : "💡 Bottom-Up"}
+            </Tag>
+          ),
+        },
+      ]
       : []),
     {
       title: "Year",
@@ -334,7 +334,7 @@ export const DashboardPage: React.FC = () => {
         >
           {/* Source Overview Segmented Controls */}
           <Space>
-            <Text style={{ color: "#aaa", fontWeight: 600, fontSize: 13 }}>
+            <Text style={{ color: token.colorTextSecondary, fontWeight: 600, fontSize: 13 }}>
               Overview:
             </Text>
             <Segmented
@@ -346,7 +346,7 @@ export const DashboardPage: React.FC = () => {
                 { label: "💡 Bottom-Up", value: "bottomup" },
               ]}
               style={{
-                background: "rgba(255,255,255,0.06)",
+                background: mode === "dark" ? "rgba(255,255,255,0.06)" : "#f3f4f6",
                 fontWeight: 500,
               }}
             />
@@ -355,7 +355,7 @@ export const DashboardPage: React.FC = () => {
           {/* Slicing Filters */}
           <Space wrap size="middle">
             <Space>
-              <Text style={{ color: "#999", fontSize: 13 }}>Year</Text>
+              <Text style={{ color: token.colorTextSecondary, fontSize: 13 }}>Year</Text>
               <Select
                 value={selectedYear}
                 onChange={handleYearChange}
@@ -367,7 +367,7 @@ export const DashboardPage: React.FC = () => {
               />
             </Space>
             <Space>
-              <Text style={{ color: "#999", fontSize: 13 }}>Portfolio</Text>
+              <Text style={{ color: token.colorTextSecondary, fontSize: 13 }}>Portfolio</Text>
               <Select
                 value={selectedPortfolio}
                 onChange={handlePortfolioChange}
@@ -379,7 +379,7 @@ export const DashboardPage: React.FC = () => {
               />
             </Space>
             <Space>
-              <Text style={{ color: "#999", fontSize: 13 }}>Category</Text>
+              <Text style={{ color: token.colorTextSecondary, fontSize: 13 }}>Category</Text>
               <Select
                 value={selectedCategory}
                 onChange={handleCategoryChange}
@@ -418,8 +418,9 @@ export const DashboardPage: React.FC = () => {
             >
               <Text
                 style={{
-                  color: "#888",
-                  fontSize: 12,
+                  color: token.colorTextSecondary,
+                  fontSize: 14,
+                  fontWeight: 600,
                   textTransform: "uppercase",
                   letterSpacing: 1,
                 }}
