@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useList } from "@refinedev/core";
 import { useNavigate, useSearchParams } from "react-router";
-import { Card, Col, Row, Select, Table, Tag, Typography, Space, Segmented } from "antd";
+import { Card, Col, Row, Select, Table, Tag, Typography, Space, Segmented, theme } from "antd";
 import {
   BarChart,
   Bar,
@@ -19,10 +19,13 @@ import {
   PORTFOLIO_COLORS,
   CATEGORY_COLORS,
 } from "../../types";
+import { useColorMode } from "../../contexts/ThemeContext";
 
 const { Title, Text } = Typography;
 
 export const DashboardPage: React.FC = () => {
+  const { mode } = useColorMode();
+  const { token } = theme.useToken();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -203,9 +206,9 @@ export const DashboardPage: React.FC = () => {
       render: (year: number) => (
         <Tag
           style={{
-            background: "rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            color: "#e0e0e0",
+            background: mode === "dark" ? "rgba(255,255,255,0.06)" : "#f3f4f6",
+            border: `1px solid ${token.colorBorder}`,
+            color: token.colorText,
           }}
         >
           {year}
@@ -305,8 +308,8 @@ export const DashboardPage: React.FC = () => {
         size="small"
         style={{
           marginBottom: 16,
-          background: "rgba(255,255,255,0.03)",
-          border: "1px solid rgba(255,255,255,0.08)",
+          background: token.colorBgContainer,
+          border: `1px solid ${token.colorBorder}`,
         }}
       >
         <div
@@ -388,8 +391,8 @@ export const DashboardPage: React.FC = () => {
               hoverable
               onClick={() => navigate(buildStatusUrl(card.slug))}
               style={{
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: token.colorBgContainer,
+                border: `1px solid ${token.colorBorder}`,
                 borderLeft: `4px solid ${card.color}`,
                 transition: "all 0.3s ease",
                 cursor: "pointer",
@@ -427,7 +430,7 @@ export const DashboardPage: React.FC = () => {
       {/* Chart */}
       <Card
         title={
-          <span style={{ color: "#e0e0e0", fontWeight: 600 }}>
+          <span style={{ color: token.colorText, fontWeight: 600 }}>
             Innovation Projects by Year
           </span>
         }
@@ -441,8 +444,8 @@ export const DashboardPage: React.FC = () => {
         }
         style={{
           marginBottom: 20,
-          background: "rgba(255,255,255,0.03)",
-          border: "1px solid rgba(255,255,255,0.08)",
+          background: token.colorBgContainer,
+          border: `1px solid ${token.colorBorder}`,
         }}
         styles={{
           body: { padding: "16px 16px 8px" },
@@ -452,17 +455,17 @@ export const DashboardPage: React.FC = () => {
           <BarChart data={chartData} barCategoryGap="25%">
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="rgba(255,255,255,0.06)"
+              stroke={mode === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)"}
               vertical={false}
             />
             <XAxis
               dataKey="year"
-              tick={{ fill: "#999", fontSize: 13 }}
-              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              tick={{ fill: token.colorTextSecondary, fontSize: 13 }}
+              axisLine={{ stroke: token.colorBorder }}
               tickLine={false}
             />
             <YAxis
-              tick={{ fill: "#999", fontSize: 12 }}
+              tick={{ fill: token.colorTextSecondary, fontSize: 12 }}
               axisLine={false}
               tickLine={false}
               allowDecimals={false}
@@ -470,14 +473,14 @@ export const DashboardPage: React.FC = () => {
             <Tooltip
               cursor={{ fill: "transparent" }}
               contentStyle={{
-                background: "#1f1f1f",
-                border: "1px solid rgba(255,255,255,0.15)",
+                background: token.colorBgElevated,
+                border: `1px solid ${token.colorBorder}`,
                 borderRadius: 8,
-                color: "#e0e0e0",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
+                color: token.colorText,
+                boxShadow: mode === "dark" ? "0 4px 20px rgba(0,0,0,0.5)" : "0 4px 12px rgba(0,0,0,0.1)",
               }}
-              itemStyle={{ color: "#e0e0e0" }}
-              labelStyle={{ color: "#fff", fontWeight: 600 }}
+              itemStyle={{ color: token.colorText }}
+              labelStyle={{ color: token.colorText, fontWeight: 600 }}
               formatter={(value: unknown) =>
                 chartMode === "%" ? `${value}%` : String(value)
               }
@@ -505,18 +508,18 @@ export const DashboardPage: React.FC = () => {
       {/* Table */}
       <Card
         title={
-          <span style={{ color: "#e0e0e0", fontWeight: 600 }}>
+          <span style={{ color: token.colorText, fontWeight: 600 }}>
             All Innovation Projects
           </span>
         }
         extra={
-          <Text style={{ color: "#888", fontSize: 13 }}>
+          <Text style={{ color: token.colorTextSecondary, fontSize: 13 }}>
             {filteredRecords.length} projects
           </Text>
         }
         style={{
-          background: "rgba(255,255,255,0.03)",
-          border: "1px solid rgba(255,255,255,0.08)",
+          background: token.colorBgContainer,
+          border: `1px solid ${token.colorBorder}`,
         }}
       >
         <Table

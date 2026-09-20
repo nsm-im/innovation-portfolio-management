@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useList } from "@refinedev/core";
 import { useParams, useNavigate, useSearchParams } from "react-router";
-import { Card, Table, Tag, Typography, Button, Space, Empty, Select, Segmented } from "antd";
+import { Card, Table, Tag, Typography, Button, Space, Empty, Select, Segmented, theme } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import type { Innovation } from "../../types";
 import {
@@ -10,6 +10,7 @@ import {
   PORTFOLIO_COLORS,
   CATEGORY_COLORS,
 } from "../../types";
+import { useColorMode } from "../../contexts/ThemeContext";
 
 const { Title, Text } = Typography;
 
@@ -27,6 +28,8 @@ const STATUS_ICONS: Record<string, string> = {
 };
 
 export const StatusListPage: React.FC = () => {
+  const { mode } = useColorMode();
+  const { token } = theme.useToken();
   const { status: statusSlug } = useParams<{ status: string }>();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -186,9 +189,9 @@ export const StatusListPage: React.FC = () => {
       render: (year: number) => (
         <Tag
           style={{
-            background: "rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            color: "#e0e0e0",
+            background: mode === "dark" ? "rgba(255,255,255,0.06)" : "#f3f4f6",
+            border: `1px solid ${token.colorBorder}`,
+            color: token.colorText,
           }}
         >
           {year}
@@ -276,8 +279,8 @@ export const StatusListPage: React.FC = () => {
         size="small"
         style={{
           marginBottom: 16,
-          background: "rgba(255,255,255,0.03)",
-          border: "1px solid rgba(255,255,255,0.08)",
+          background: token.colorBgContainer,
+          border: `1px solid ${token.colorBorder}`,
         }}
       >
         <Space wrap size="middle">
@@ -337,8 +340,8 @@ export const StatusListPage: React.FC = () => {
         size="small"
         style={{
           marginBottom: 20,
-          background: "rgba(255,255,255,0.03)",
-          border: "1px solid rgba(255,255,255,0.08)",
+          background: token.colorBgContainer,
+          border: `1px solid ${token.colorBorder}`,
         }}
       >
         <Space size="small" style={{ display: "flex", flexWrap: "wrap" }}>
@@ -348,18 +351,20 @@ export const StatusListPage: React.FC = () => {
             return (
               <React.Fragment key={s}>
                 {i > 0 && (
-                  <span style={{ color: "#555", margin: "0 4px" }}>→</span>
+                  <span style={{ color: token.colorTextSecondary, margin: "0 4px" }}>→</span>
                 )}
                 <Tag
                   style={{
                     cursor: "pointer",
                     background: isActive
                       ? STATUS_COLORS[s]
-                      : "rgba(255,255,255,0.04)",
-                    color: isActive ? "#fff" : "#888",
+                      : mode === "dark"
+                      ? "rgba(255,255,255,0.04)"
+                      : "#f3f4f6",
+                    color: isActive ? "#fff" : token.colorTextSecondary,
                     border: isActive
                       ? "none"
-                      : "1px solid rgba(255,255,255,0.1)",
+                      : `1px solid ${token.colorBorder}`,
                     borderRadius: 16,
                     padding: "4px 14px",
                     fontWeight: isActive ? 600 : 400,
@@ -380,13 +385,13 @@ export const StatusListPage: React.FC = () => {
       {filteredRecords.length === 0 && !isLoading ? (
         <Card
           style={{
-            background: "rgba(255,255,255,0.03)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            background: token.colorBgContainer,
+            border: `1px solid ${token.colorBorder}`,
           }}
         >
           <Empty
             description={
-              <Text style={{ color: "#888" }}>
+              <Text style={{ color: token.colorTextSecondary }}>
                 No projects found for status "{statusName}" with current filters
               </Text>
             }
@@ -401,19 +406,19 @@ export const StatusListPage: React.FC = () => {
             <Card
               key={year}
               title={
-                <span style={{ color: "#e0e0e0", fontWeight: 600 }}>
+                <span style={{ color: token.colorText, fontWeight: 600 }}>
                   📅 Year {year}
                 </span>
               }
               extra={
-                <Text style={{ color: "#888", fontSize: 13 }}>
+                <Text style={{ color: token.colorTextSecondary, fontSize: 13 }}>
                   {yearRecords.length} project{yearRecords.length !== 1 ? "s" : ""}
                 </Text>
               }
               style={{
                 marginBottom: 16,
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: token.colorBgContainer,
+                border: `1px solid ${token.colorBorder}`,
               }}
             >
               <Table
