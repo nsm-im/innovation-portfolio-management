@@ -30,7 +30,17 @@ jobs:
 
             try {
               const { data } = await github.rest.repos.getPages({ owner, repo });
-              core.info(`GitHub Pages is configured for ${data.html_url ?? `${owner}/${repo}`}.`);
+              const buildType = data.build_type ?? 'legacy';
+              core.info(`GitHub Pages is configured for ${data.html_url ?? `${owner}/${repo}`} using the ${buildType} build type.`);
+
+              if (buildType !== 'workflow') {
+                const notice = `GitHub Pages is enabled for this repository, but Settings → Pages is still using the ${buildType} source. Switch it to GitHub Actions, then rerun this workflow.`;
+                core.warning(notice);
+                core.setOutput('notice', notice);
+                core.setOutput('enabled', 'false');
+                return;
+              }
+
               core.setOutput('enabled', 'true');
             } catch (error) {
               if (error.status === 404) {
