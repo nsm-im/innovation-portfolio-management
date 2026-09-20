@@ -87,4 +87,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: GitHub Pages setup required
-        run: echo "::notice::${{ needs.check-pages.outputs.notice }}"
+        uses: actions/github-script@v7
+        env:
+          PAGES_NOTICE: ${{ needs.check-pages.outputs.notice }}
+        with:
+          script: |
+            core.notice(process.env.PAGES_NOTICE);
