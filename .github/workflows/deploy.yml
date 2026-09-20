@@ -41,14 +41,6 @@ jobs:
                 return;
               }
 
-              if (error.status === 403 && error.message?.includes('Resource not accessible by integration')) {
-                const notice = 'This workflow token cannot inspect or enable the repository Pages site. Enable Settings > Pages with the GitHub Actions source, then rerun this workflow.';
-                core.warning(notice);
-                core.setOutput('notice', notice);
-                core.setOutput('enabled', 'false');
-                return;
-              }
-
               throw error;
             }
 
