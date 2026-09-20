@@ -127,4 +127,4 @@ Open `http://localhost:8080` in your browser.
 
 The repository includes a GitHub Actions workflow at `.github/workflows/deploy.yml` to publish the Vite build to GitHub Pages.
 
-For the first deployment, GitHub Pages must already be enabled for the repository in **Settings → Pages** with **Source: GitHub Actions**. The workflow now detects when that one-time repository setup is still incomplete (including when Pages is enabled but still using the legacy branch-based source), skips the deploy step, and prints an actionable notice instead of failing the build.
+For the first deployment, GitHub Pages must already be enabled for the repository in **Settings → Pages** with **Source: GitHub Actions**. The workflow now detects when that one-time repository setup is still incomplete (including when Pages is enabled but still using the legacy branch-based source), and it also skips deployment for private repositories when private-repository Pages support is unavailable (the condition that causes `deploy-pages` to return HTTP 422). In these cases, the workflow prints an actionable notice instead of failing the build.

@@ -29,6 +29,15 @@ jobs:
             const { owner, repo } = context.repo;
 
             try {
+              const { data: repository } = await github.rest.repos.get({ owner, repo });
+              if (repository.private) {
+                const notice = 'GitHub Pages deployment is skipped because this repository is private. GitHub Pages deployments from private repositories require plan support; otherwise deploy-pages returns HTTP 422. Make the repository public or enable private-repository Pages support, then rerun this workflow.';
+                core.warning(notice);
+                core.setOutput('notice', notice);
+                core.setOutput('enabled', 'false');
+                return;
+              }
+
               const { data } = await github.rest.repos.getPages({ owner, repo });
               const buildType = data.build_type ?? 'legacy';
               core.info(`GitHub Pages is configured for ${data.html_url ?? `${owner}/${repo}`} using the ${buildType} build type.`);
