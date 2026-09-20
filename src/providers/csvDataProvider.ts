@@ -73,8 +73,16 @@ async function fetchTopDown(): Promise<Innovation[]> {
     let status: Innovation["status"] = "In Progress";
     if (rawStatus.toLowerCase() === "done" || rawStatus.toLowerCase() === "launch") {
       status = "Done";
-    } else if (rawStatus.toLowerCase() === "rejected") {
-      status = "Rejected";
+    } else if (
+      rawStatus.toLowerCase() === "terminated" ||
+      rawStatus.toLowerCase() === "rejected"
+    ) {
+      status = "Terminated";
+    }
+
+    let portfolio = (row["innovation_management_portfolio"] || "Core").trim();
+    if (portfolio.toLowerCase() === "tranformation") {
+      portfolio = "Transformation";
     }
 
     data.push({
@@ -82,7 +90,7 @@ async function fetchTopDown(): Promise<Innovation[]> {
       name: row["name"] || "",
       year: yearVal,
       status,
-      innovation_management_portfolio: row["innovation_management_portfolio"] || "Core",
+      innovation_management_portfolio: portfolio,
       innovation_category: row["innovation_category"] || "Product",
       source: "top-down",
     });
@@ -115,8 +123,16 @@ async function fetchBottomUp(): Promise<Innovation[]> {
     let status: Innovation["status"] = "In Progress";
     if (rawStatus.toLowerCase() === "done" || rawStatus.toLowerCase() === "launch") {
       status = "Done";
-    } else if (rawStatus.toLowerCase() === "rejected") {
-      status = "Rejected";
+    } else if (
+      rawStatus.toLowerCase() === "terminated" ||
+      rawStatus.toLowerCase() === "rejected"
+    ) {
+      status = "Terminated";
+    }
+
+    let portfolio = (row["innovation_management_portfolio"] || "Core").trim();
+    if (portfolio.toLowerCase() === "tranformation") {
+      portfolio = "Transformation";
     }
 
     data.push({
@@ -124,7 +140,7 @@ async function fetchBottomUp(): Promise<Innovation[]> {
       name: row["name"] || "",
       year: yearVal,
       status,
-      innovation_management_portfolio: row["innovation_management_portfolio"] || "Core",
+      innovation_management_portfolio: portfolio,
       innovation_category: row["innovation_category"] || "Product",
       source: "bottom-up",
       description: row["description"] || "",

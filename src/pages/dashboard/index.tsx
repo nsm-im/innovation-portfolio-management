@@ -187,8 +187,11 @@ export const DashboardPage: React.FC = () => {
           width: "12%",
           render: (src: string) => (
             <Tag
-              color={src === "top-down" ? "#e67e22" : "#3b82f6"}
-              style={{ borderRadius: 12, padding: "2px 10px" }}
+              style={{
+                background: mode === "dark" ? "rgba(255,255,255,0.06)" : "#f3f4f6",
+                border: `1px solid ${token.colorBorder}`,
+                color: token.colorText,
+              }}
             >
               {src === "top-down" ? "🏛️ Top-Down" : "💡 Bottom-Up"}
             </Tag>
@@ -303,10 +306,10 @@ export const DashboardPage: React.FC = () => {
       isTotal: false,
     },
     {
-      title: "Rejected",
-      slug: "rejected",
-      count: statusCounts["Rejected"] || 0,
-      color: STATUS_COLORS["Rejected"],
+      title: "Terminated",
+      slug: "terminated",
+      count: statusCounts["Terminated"] || 0,
+      color: STATUS_COLORS["Terminated"],
       icon: "❌",
       isTotal: false,
     },

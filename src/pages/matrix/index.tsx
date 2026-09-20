@@ -287,7 +287,7 @@ export const MatrixPage: React.FC = () => {
                   { label: "All Statuses", value: "all" },
                   { label: "In Progress", value: "In Progress" },
                   { label: "Done", value: "Done" },
-                  { label: "Rejected", value: "Rejected" },
+                  { label: "Terminated", value: "Terminated" },
                 ]}
               />
             </Space>
@@ -298,45 +298,63 @@ export const MatrixPage: React.FC = () => {
       {/* Matrix Board */}
       <div
         style={{
-          background: token.colorBgContainer,
-          border: `1px solid ${token.colorBorder}`,
-          borderRadius: 16,
-          padding: 24,
-          overflowX: "auto",
+          display: "grid",
+          gridTemplateColumns: "190px repeat(3, 1fr)",
+          gap: 16,
+          alignItems: "stretch",
         }}
       >
-        {/* Matrix Grid Structure */}
+        {/* Top-Left Corner Cell */}
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "180px repeat(3, minmax(220px, 1fr))",
-            gap: 16,
-            minWidth: 800,
+            background: token.colorBgContainer,
+            border: `1px solid ${token.colorBorder}`,
+            borderRadius: 16,
+            padding: "16px 14px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
           }}
         >
-          {/* Top-Left Cell: Status Legend */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            <span
+              style={{
+                fontSize: 10,
+                color: token.colorTextSecondary,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+              }}
+            >
+              Y: Degree of Innovation
+            </span>
+            <span
+              style={{
+                fontSize: 10,
+                color: token.colorTextSecondary,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+              }}
+            >
+              X: Type of Innovation
+            </span>
+          </div>
+
+          {/* Status color legend */}
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "flex-start",
-              padding: "10px 14px",
-              background:
-                mode === "dark"
-                  ? "rgba(255, 255, 255, 0.02)"
-                  : "rgba(0, 0, 0, 0.02)",
-              borderRadius: 12,
-              border: `1px solid ${token.colorBorderSecondary}`,
               gap: 6,
+              marginTop: 10,
+              paddingTop: 8,
+              borderTop: `1px solid ${token.colorBorderSecondary}`,
             }}
           >
             <span
               style={{
-                fontSize: 10,
-                fontWeight: 700,
+                fontSize: 9,
                 color: token.colorTextSecondary,
-                letterSpacing: 0.8,
+                letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 marginBottom: 2,
               }}
@@ -377,24 +395,53 @@ export const MatrixPage: React.FC = () => {
                   width: 10,
                   height: 10,
                   borderRadius: "50%",
-                  backgroundColor: STATUS_COLORS["Rejected"],
+                  backgroundColor: STATUS_COLORS["Terminated"],
                   boxShadow: `0 0 6px rgba(217, 100, 121, 0.5)`,
                 }}
               />
               <span style={{ fontSize: 12, fontWeight: 500, color: token.colorText }}>
-                Rejected
+                Terminated
               </span>
             </div>
           </div>
+        </div>
 
-          {/* X-Axis Column Headers */}
-          {CATEGORY_COLS.map((col) => (
+        {/* X-Axis Column Headers */}
+        {CATEGORY_COLS.map((col) => (
+          <div
+            key={col.key}
+            style={{
+              background: col.color,
+              borderRadius: 16,
+              padding: "16px 14px",
+              color: "#ffffff",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
+              minHeight: 88,
+            }}
+          >
+            <span style={{ fontWeight: 700, fontSize: 16, lineHeight: 1.3 }}>
+              {col.title}
+            </span>
+            <span style={{ fontSize: 12, opacity: 0.85, marginTop: 4, lineHeight: 1.3 }}>
+              {col.subtitle}
+            </span>
+          </div>
+        ))}
+
+        {/* Y-Axis Rows and Intersecting Cells */}
+        {PORTFOLIO_ROWS.map((row) => (
+          <React.Fragment key={row.key}>
+            {/* Row Header (Y-Axis) */}
             <div
-              key={col.key}
               style={{
-                background: col.color,
+                background: row.color,
                 borderRadius: 16,
-                padding: "16px 14px",
+                padding: "18px 14px",
                 color: "#ffffff",
                 display: "flex",
                 flexDirection: "column",
@@ -402,217 +449,188 @@ export const MatrixPage: React.FC = () => {
                 alignItems: "center",
                 textAlign: "center",
                 boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
-                minHeight: 88,
               }}
             >
               <span style={{ fontWeight: 700, fontSize: 16, lineHeight: 1.3 }}>
-                {col.title}
+                {row.title}
               </span>
               <span style={{ fontSize: 12, opacity: 0.85, marginTop: 4, lineHeight: 1.3 }}>
-                {col.subtitle}
+                {row.subtitle}
               </span>
             </div>
-          ))}
 
-          {/* Y-Axis Rows and Intersecting Cells */}
-          {PORTFOLIO_ROWS.map((row) => (
-            <React.Fragment key={row.key}>
-              {/* Row Header (Y-Axis) */}
-              <div
-                style={{
-                  background: row.color,
-                  borderRadius: 16,
-                  padding: "18px 14px",
-                  color: "#ffffff",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
-                }}
-              >
-                <span style={{ fontWeight: 700, fontSize: 16, lineHeight: 1.3 }}>
-                  {row.title}
-                </span>
-                <span style={{ fontSize: 12, opacity: 0.85, marginTop: 4, lineHeight: 1.3 }}>
-                  {row.subtitle}
-                </span>
-              </div>
+            {/* 3 Cells for this Row */}
+            {CATEGORY_COLS.map((col) => {
+              const items = matrixData[row.key]?.[col.key] || [];
+              const cellBg =
+                mode === "dark"
+                  ? "rgba(255, 255, 255, 0.03)"
+                  : "#f9fafb";
+              const cellBorder =
+                mode === "dark"
+                  ? "rgba(255, 255, 255, 0.08)"
+                  : "rgba(0, 0, 0, 0.06)";
 
-              {/* 3 Cells for this Row */}
-              {CATEGORY_COLS.map((col) => {
-                const items = matrixData[row.key]?.[col.key] || [];
-                const cellBg =
-                  mode === "dark"
-                    ? "rgba(255, 255, 255, 0.03)"
-                    : "#f9fafb";
-                const cellBorder =
-                  mode === "dark"
-                    ? "rgba(255, 255, 255, 0.08)"
-                    : "rgba(0, 0, 0, 0.06)";
-
-                return (
+              return (
+                <div
+                  key={`${row.key}-${col.key}`}
+                  onClick={() => {
+                    if (items.length > 0) {
+                      setSelectedCell({
+                        portfolio: row,
+                        category: col,
+                        items,
+                      });
+                    }
+                  }}
+                  style={{
+                    background: cellBg,
+                    border: `1.5px solid ${cellBorder}`,
+                    borderRadius: 16,
+                    minHeight: 140,
+                    padding: "14px 16px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+                    cursor: items.length > 0 ? "pointer" : "default",
+                    position: "relative",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (items.length > 0) {
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                      e.currentTarget.style.borderColor = row.color;
+                      e.currentTarget.style.boxShadow = `0 6px 20px ${row.color}25`;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.borderColor = cellBorder;
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                >
+                  {/* Cell Top Details */}
                   <div
-                    key={`${row.key}-${col.key}`}
-                    onClick={() => {
-                      if (items.length > 0) {
-                        setSelectedCell({
-                          portfolio: row,
-                          category: col,
-                          items,
-                        });
-                      }
-                    }}
                     style={{
-                      background: cellBg,
-                      border: `1.5px solid ${cellBorder}`,
-                      borderRadius: 16,
-                      minHeight: 140,
-                      padding: "14px 16px",
                       display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                      transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
-                      cursor: items.length > 0 ? "pointer" : "default",
-                      position: "relative",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (items.length > 0) {
-                        e.currentTarget.style.transform = "translateY(-2px)";
-                        e.currentTarget.style.borderColor = row.color;
-                        e.currentTarget.style.boxShadow = `0 6px 20px ${row.color}25`;
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = "translateY(0)";
-                      e.currentTarget.style.borderColor = cellBorder;
-                      e.currentTarget.style.boxShadow = "none";
+                      justifyContent: "flex-end",
+                      alignItems: "center",
                     }}
                   >
-                    {/* Cell Top Details */}
-                    <div
+                    <span
                       style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
+                        fontWeight: 700,
+                        fontSize: 13,
+                        padding: "2px 8px",
+                        borderRadius: 10,
+                        background:
+                          items.length > 0
+                            ? `${row.color}20`
+                            : "transparent",
+                        color: items.length > 0 ? token.colorText : token.colorTextSecondary,
                       }}
                     >
-                      <span
-                        style={{
-                          fontWeight: 700,
-                          fontSize: 13,
-                          padding: "2px 8px",
-                          borderRadius: 10,
-                          background:
-                            items.length > 0
-                              ? `${row.color}20`
-                              : "transparent",
-                          color: items.length > 0 ? row.color : "#666",
-                        }}
-                      >
-                        {items.length} {items.length === 1 ? "project" : "projects"}
-                      </span>
-                    </div>
+                      {items.length} {items.length === 1 ? "project" : "projects"}
+                    </span>
+                  </div>
 
-                    {/* Dot Visualization matching reference image */}
-                    <div
-                      style={{
-                        display: "flex",
-                        flex: 1,
-                        flexWrap: "wrap",
-                        gap: 8,
-                        margin: "12px 0",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        minHeight: 60,
-                      }}
-                    >
-                      {items.length === 0 ? (
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            width: "100%",
-                            height: "100%",
-                          }}
-                        >
-                          <span
-                            style={{
-                              fontSize: 13,
-                              color: token.colorTextSecondary,
-                              fontStyle: "italic",
-                              opacity: 0.7,
-                            }}
-                          >
-                            No innovations
-                          </span>
-                        </div>
-                      ) : (
-                        items.slice(0, 18).map((item, idx) => {
-                          const dotColor =
-                            STATUS_COLORS[item.status] || row.color;
-                          return (
-                            <Tooltip
-                              key={item.id || idx}
-                              title={`${item.name} (${item.year}) - ${item.status}`}
-                            >
-                              <div
-                                style={{
-                                  width: 14,
-                                  height: 14,
-                                  borderRadius: "50%",
-                                  backgroundColor: dotColor,
-                                  boxShadow: dotColor.startsWith("rgb")
-                                    ? dotColor.replace("rgb", "rgba").replace(")", ", 0.5)")
-                                    : `0 0 8px ${dotColor}80`,
-                                  transition: "transform 0.15s ease",
-                                  cursor: "pointer",
-                                }}
-                                onMouseEnter={(e) =>
-                                  (e.currentTarget.style.transform = "scale(1.4)")
-                                }
-                                onMouseLeave={(e) =>
-                                  (e.currentTarget.style.transform = "scale(1)")
-                                }
-                              />
-                            </Tooltip>
-                          );
-                        })
-                      )}
-                      {items.length > 18 && (
-                        <span
-                          style={{
-                            fontSize: 11,
-                            fontWeight: 600,
-                            color: token.colorTextSecondary,
-                          }}
-                        >
-                          +{items.length - 18} more
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Footer Prompt */}
-                    {items.length > 0 && (
+                  {/* Dot Visualization matching reference image */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flex: 1,
+                      flexWrap: "wrap",
+                      gap: 8,
+                      margin: "12px 0",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      minHeight: 60,
+                    }}
+                  >
+                    {items.length === 0 ? (
                       <div
                         style={{
-                          fontSize: 11,
-                          color: row.color,
-                          textAlign: "right",
-                          fontWeight: 600,
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          width: "100%",
+                          height: "100%",
                         }}
                       >
-                        View list →
+                        <span
+                          style={{
+                            fontSize: 13,
+                            color: token.colorTextSecondary,
+                            fontStyle: "italic",
+                            opacity: 0.7,
+                          }}
+                        >
+                          No innovations
+                        </span>
                       </div>
+                    ) : (
+                      items.slice(0, 18).map((item, idx) => {
+                        const dotColor =
+                          STATUS_COLORS[item.status] || row.color;
+                        return (
+                          <Tooltip
+                            key={item.id || idx}
+                            title={`${item.name} (${item.year}) - ${item.status}`}
+                          >
+                            <div
+                              style={{
+                                width: 14,
+                                height: 14,
+                                borderRadius: "50%",
+                                backgroundColor: dotColor,
+                                boxShadow: dotColor.startsWith("rgb")
+                                  ? dotColor.replace("rgb", "rgba").replace(")", ", 0.5)")
+                                  : `0 0 8px ${dotColor}80`,
+                                transition: "transform 0.15s ease",
+                                cursor: "pointer",
+                              }}
+                              onMouseEnter={(e) =>
+                                (e.currentTarget.style.transform = "scale(1.4)")
+                              }
+                              onMouseLeave={(e) =>
+                                (e.currentTarget.style.transform = "scale(1)")
+                              }
+                            />
+                          </Tooltip>
+                        );
+                      })
+                    )}
+                    {items.length > 18 && (
+                      <span
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 600,
+                          color: token.colorTextSecondary,
+                        }}
+                      >
+                        +{items.length - 18} more
+                      </span>
                     )}
                   </div>
-                );
-              })}
-            </React.Fragment>
-          ))}
-        </div>
+
+                  {/* Footer Prompt */}
+                  {items.length > 0 && (
+                    <div
+                      style={{
+                        fontSize: 11,
+                        color: row.color,
+                        textAlign: "right",
+                        fontWeight: 600,
+                      }}
+                    >
+                      View list →
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </React.Fragment>
+        ))}
       </div>
 
       {/* Detail Drilldown Modal */}

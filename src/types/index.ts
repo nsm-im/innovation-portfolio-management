@@ -4,7 +4,7 @@ export interface Innovation {
   id: number;
   name: string;
   year: number;
-  status: "In Progress" | "Done" | "Rejected";
+  status: "In Progress" | "Done" | "Terminated";
   innovation_management_portfolio: "Core" | "Adjacent" | "Transformation" | string;
   innovation_category: "Service" | "Product" | "Process" | string;
   source?: InnovationSource;
@@ -16,13 +16,13 @@ export interface Innovation {
 export const STATUS_ORDER = [
   "In Progress",
   "Done",
-  "Rejected",
+  "Terminated",
 ] as const;
 
 export const STATUS_COLORS: Record<string, string> = {
   "In Progress": "rgb(61, 136, 198)",
   Done: "rgb(86, 177, 141)",
-  Rejected: "rgb(217, 100, 121)",
+  Terminated: "rgb(217, 100, 121)",
 };
 
 export const PORTFOLIO_COLORS: Record<string, string> = {

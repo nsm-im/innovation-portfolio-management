@@ -18,12 +18,14 @@ const { Title, Text } = Typography;
 const SLUG_TO_STATUS: Record<string, string> = {
   "in-progress": "In Progress",
   done: "Done",
-  rejected: "Rejected",
+  terminated: "Terminated",
+  rejected: "Terminated",
 };
 
 const STATUS_ICONS: Record<string, string> = {
   "In Progress": "⚙️",
   Done: "🚀",
+  Terminated: "❌",
   Rejected: "❌",
 };
 
@@ -164,8 +166,11 @@ export const StatusListPage: React.FC = () => {
           width: "12%",
           render: (src: string) => (
             <Tag
-              color={src === "bottom-up" ? "cyan" : "blue"}
-              style={{ borderRadius: 10, padding: "1px 8px", fontSize: 11 }}
+              style={{
+                background: mode === "dark" ? "rgba(255,255,255,0.06)" : "#f3f4f6",
+                border: `1px solid ${token.colorBorder}`,
+                color: token.colorText,
+              }}
             >
               {src === "bottom-up" ? "💡 Bottom-Up" : "🏛️ Top-Down"}
             </Tag>
