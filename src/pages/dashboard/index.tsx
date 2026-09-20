@@ -202,8 +202,6 @@ export const DashboardPage: React.FC = () => {
       dataIndex: "year",
       key: "year",
       width: "10%",
-      sorter: (a: Innovation, b: Innovation) =>
-        a.year - b.year,
       render: (year: number) => (
         <Tag
           style={{
@@ -255,9 +253,6 @@ export const DashboardPage: React.FC = () => {
       dataIndex: "status",
       key: "status",
       width: "15%",
-      filters: STATUS_ORDER.map((s) => ({ text: s, value: s })),
-      onFilter: (value: unknown, record: Innovation) =>
-        record.status === value,
       render: (status: string) => (
         <Tag
           color={STATUS_COLORS[status]}
@@ -306,28 +301,38 @@ export const DashboardPage: React.FC = () => {
       slug: "done",
       count: statusCounts["Done"] || 0,
       color: STATUS_COLORS["Done"],
-      icon: "🚀",
+      icon: "✅",
       isTotal: false,
     },
     {
-      title: "Terminated",
-      slug: "terminated",
-      count: statusCounts["Terminated"] || 0,
-      color: STATUS_COLORS["Terminated"],
-      icon: "❌",
+      title: "Explore",
+      slug: "explore",
+      count: statusCounts["Explore"] || 0,
+      color: STATUS_COLORS["Explore"],
+      icon: "🔍",
       isTotal: false,
     },
   ];
 
   return (
-    <div style={{ padding: "0 8px" }}>
-      {/* Top Source Mode & Filter Bar */}
+    <div style={{ padding: "0 8px 32px" }}>
+      {/* Top Header Card */}
+      <div style={{ marginBottom: 20 }}>
+        <Title level={2} style={{ margin: 0, fontWeight: 700 }}>
+          💡 Innovation Portfolio Overview
+        </Title>
+      </div>
+
+      {/* Overview Source Tabs & Slicing Filters */}
       <Card
         size="small"
         style={{
-          marginBottom: 16,
+          marginBottom: 20,
           background: token.colorBgContainer,
           border: `1px solid ${token.colorBorder}`,
+        }}
+        styles={{
+          body: { padding: "12px 16px" },
         }}
       >
         <div
@@ -437,10 +442,9 @@ export const DashboardPage: React.FC = () => {
               <Title
                 level={2}
                 style={{
+                  margin: "8px 0 0",
                   color: card.color,
-                  margin: "4px 0 0",
                   fontWeight: 700,
-                  fontSize: 36,
                 }}
               >
                 {card.count}
@@ -450,19 +454,21 @@ export const DashboardPage: React.FC = () => {
         ))}
       </Row>
 
-      {/* Chart */}
+      {/* Main Chart */}
       <Card
         title={
           <span style={{ color: token.colorText, fontWeight: 600 }}>
-            Innovation Projects by Year
+            Innovation Pipeline by Status
           </span>
         }
         extra={
           <Segmented
-            options={["Projects", "%"]}
             value={chartMode}
-            onChange={(val) => setChartMode(val as string)}
-            size="small"
+            onChange={(val) => setChartMode(String(val))}
+            options={["Projects", "%"]}
+            style={{
+              background: mode === "dark" ? "rgba(255,255,255,0.06)" : "#f3f4f6",
+            }}
           />
         }
         style={{
@@ -470,62 +476,59 @@ export const DashboardPage: React.FC = () => {
           background: token.colorBgContainer,
           border: `1px solid ${token.colorBorder}`,
         }}
-        styles={{
-          body: { padding: "16px 16px 8px" },
-        }}
       >
-        <ResponsiveContainer width="100%" height={260}>
-          <BarChart data={chartData} barCategoryGap="20%" maxBarSize={56}>
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke={mode === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)"}
-              vertical={false}
-            />
-            <XAxis
-              dataKey="year"
-              tick={{ fill: token.colorTextSecondary, fontSize: 13 }}
-              axisLine={{ stroke: token.colorBorder }}
-              tickLine={false}
-            />
-            <YAxis
-              tick={{ fill: token.colorTextSecondary, fontSize: 12 }}
-              axisLine={false}
-              tickLine={false}
-              allowDecimals={false}
-            />
-            <Tooltip
-              cursor={{ fill: "transparent" }}
-              contentStyle={{
-                background: token.colorBgElevated,
-                border: `1px solid ${token.colorBorder}`,
-                borderRadius: 8,
-                color: token.colorText,
-                boxShadow: mode === "dark" ? "0 4px 20px rgba(0,0,0,0.5)" : "0 4px 12px rgba(0,0,0,0.1)",
-              }}
-              itemStyle={{ color: token.colorText }}
-              labelStyle={{ color: token.colorText, fontWeight: 600 }}
-              formatter={(value: unknown) =>
-                chartMode === "%" ? `${value}%` : String(value)
-              }
-            />
-            <Legend
-              wrapperStyle={{ color: "#999", paddingTop: 8 }}
-              iconType="circle"
-              iconSize={10}
-            />
-            {STATUS_ORDER.map((status, idx) => (
-              <Bar
-                key={status}
-                dataKey={status}
-                stackId="stack"
-                fill={STATUS_COLORS[status]}
-                radius={
-                  idx === STATUS_ORDER.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]
-                }
+        <div style={{ width: "100%", height: 350 }}>
+          <ResponsiveContainer>
+            <BarChart
+              data={chartData}
+              margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke={mode === "dark" ? "rgba(255,255,255,0.06)" : "#f0f0f0"}
               />
-            ))}
-          </BarChart>
-        </ResponsiveContainer>
+              <XAxis
+                dataKey="year"
+                stroke={token.colorTextSecondary}
+                tick={{ fill: token.colorTextSecondary }}
+              />
+              <YAxis
+                stroke={token.colorTextSecondary}
+                tick={{ fill: token.colorTextSecondary }}
+                domain={chartMode === "%" ? [0, 100] : [0, "auto"]}
+                tickFormatter={(val) => chartMode === "%" ? `${val}%` : `${val}`}
+              />
+              <Tooltip
+                formatter={(value: any, name: any) => [
+                  chartMode === "%" ? `${value}%` : `${value} projects`,
+                  name,
+                ]}
+                contentStyle={{
+                  background: token.colorBgElevated,
+                  border: `1px solid ${token.colorBorder}`,
+                  borderRadius: 8,
+                  color: token.colorText,
+                }}
+              />
+              <Legend
+                wrapperStyle={{ color: token.colorTextSecondary }}
+              />
+              {STATUS_ORDER.map((status) => (
+                <Bar
+                  key={status}
+                  dataKey={status}
+                  stackId="a"
+                  fill={STATUS_COLORS[status]}
+                  radius={
+                    status === STATUS_ORDER[STATUS_ORDER.length - 1]
+                      ? [4, 4, 0, 0]
+                      : [0, 0, 0, 0]
+                  }
+                />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </Card>
 
       {/* Table */}

@@ -189,8 +189,6 @@ export const StatusListPage: React.FC = () => {
       dataIndex: "year",
       key: "year",
       width: "10%",
-      sorter: (a: Innovation, b: Innovation) =>
-        a.year - b.year,
       render: (year: number) => (
         <Tag
           style={{
