@@ -386,6 +386,7 @@ export const DashboardPage: React.FC = () => {
               allowDecimals={false}
             />
             <Tooltip
+              cursor={{ fill: "transparent" }}
               contentStyle={{
                 background: "#1f1f1f",
                 border: "1px solid rgba(255,255,255,0.15)",
