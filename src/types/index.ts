@@ -1,10 +1,16 @@
+export type InnovationSource = "top-down" | "bottom-up";
+
 export interface Innovation {
   id: number;
   name: string;
   year: number;
   status: "In Progress" | "Done" | "Rejected";
-  innovation_management_portfolio: "Core" | "Adjacent";
-  innovation_category: "Service" | "Product" | "Process";
+  innovation_management_portfolio: "Core" | "Adjacent" | "Transformation" | string;
+  innovation_category: "Service" | "Product" | "Process" | string;
+  source?: InnovationSource;
+  description?: string;
+  responsible_department?: string;
+  submitter_info?: string;
 }
 
 export const STATUS_ORDER = [
@@ -22,6 +28,8 @@ export const STATUS_COLORS: Record<string, string> = {
 export const PORTFOLIO_COLORS: Record<string, string> = {
   Core: "#06b6d4",
   Adjacent: "#f97316",
+  Transformation: "#a855f7",
+  Tranformation: "#a855f7",
 };
 
 export const CATEGORY_COLORS: Record<string, string> = {

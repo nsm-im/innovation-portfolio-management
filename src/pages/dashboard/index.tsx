@@ -26,6 +26,9 @@ export const DashboardPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
+  const [selectedSource, setSelectedSource] = useState<string>(
+    searchParams.get("source") || "all"
+  );
   const [selectedYear, setSelectedYear] = useState<string>(
     searchParams.get("year") || "all"
   );
@@ -39,10 +42,19 @@ export const DashboardPage: React.FC = () => {
 
   // Keep state synced when searchParams change (e.g. back button navigation)
   useEffect(() => {
+    setSelectedSource(searchParams.get("source") || "all");
     setSelectedYear(searchParams.get("year") || "all");
     setSelectedPortfolio(searchParams.get("portfolio") || "all");
     setSelectedCategory(searchParams.get("category") || "all");
   }, [searchParams]);
+
+  const handleSourceChange = (source: string) => {
+    setSelectedSource(source);
+    const newParams = new URLSearchParams(searchParams);
+    if (source !== "all") newParams.set("source", source);
+    else newParams.delete("source");
+    setSearchParams(newParams, { replace: true });
+  };
 
   // Update search params when user changes filters
   const handleYearChange = (year: string) => {
@@ -74,8 +86,19 @@ export const DashboardPage: React.FC = () => {
     pagination: { mode: "off" },
   });
 
-  const allRecords = useMemo(() => (result?.data ?? []) as Innovation[], [result]);
+  const rawRecords = useMemo(() => (result?.data ?? []) as Innovation[], [result]);
   const isLoading = query?.isLoading ?? false;
+
+  // Filter records by selected overview source first
+  const allRecords = useMemo(() => {
+    if (selectedSource === "topdown") {
+      return rawRecords.filter((r) => r.source === "top-down");
+    }
+    if (selectedSource === "bottomup") {
+      return rawRecords.filter((r) => r.source === "bottom-up");
+    }
+    return rawRecords;
+  }, [rawRecords, selectedSource]);
 
   // Apply filters
   const filteredRecords = useMemo(() => {
@@ -125,9 +148,21 @@ export const DashboardPage: React.FC = () => {
     });
   }, [allRecords, filteredRecords, chartMode]);
 
-  // Available years
+  // Available years for current source
   const years = useMemo(
     () => [...new Set(allRecords.map((r) => r.year))].sort(),
+    [allRecords]
+  );
+
+  // Available portfolios for current source
+  const availablePortfolios = useMemo(
+    () => [...new Set(allRecords.map((r) => r.innovation_management_portfolio).filter(Boolean))].sort(),
+    [allRecords]
+  );
+
+  // Available categories for current source
+  const availableCategories = useMemo(
+    () => [...new Set(allRecords.map((r) => r.innovation_category).filter(Boolean))].sort(),
     [allRecords]
   );
 
@@ -138,8 +173,26 @@ export const DashboardPage: React.FC = () => {
       dataIndex: "name",
       key: "name",
       ellipsis: true,
-      width: "35%",
+      width: selectedSource === "all" ? "30%" : "35%",
     },
+    ...(selectedSource === "all"
+      ? [
+          {
+            title: "Source",
+            dataIndex: "source",
+            key: "source",
+            width: "12%",
+            render: (src: string) => (
+              <Tag
+                color={src === "top-down" ? "#e67e22" : "#3b82f6"}
+                style={{ borderRadius: 12, padding: "2px 10px" }}
+              >
+                {src === "top-down" ? "🏛️ Top-Down" : "💡 Bottom-Up"}
+              </Tag>
+            ),
+          },
+        ]
+      : []),
     {
       title: "Year",
       dataIndex: "year",
@@ -163,7 +216,7 @@ export const DashboardPage: React.FC = () => {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      width: "18%",
+      width: "15%",
       filters: STATUS_ORDER.map((s) => ({ text: s, value: s })),
       onFilter: (value: unknown, record: Innovation) =>
         record.status === value,
@@ -187,7 +240,7 @@ export const DashboardPage: React.FC = () => {
       width: "15%",
       render: (portfolio: string) => (
         <Tag
-          color={PORTFOLIO_COLORS[portfolio]}
+          color={PORTFOLIO_COLORS[portfolio] || "#888"}
           style={{ borderRadius: 12, padding: "2px 12px" }}
         >
           {portfolio}
@@ -201,7 +254,7 @@ export const DashboardPage: React.FC = () => {
       width: "15%",
       render: (category: string) => (
         <Tag
-          color={CATEGORY_COLORS[category]}
+          color={CATEGORY_COLORS[category] || "#888"}
           style={{ borderRadius: 12, padding: "2px 12px" }}
         >
           {category}
@@ -213,6 +266,7 @@ export const DashboardPage: React.FC = () => {
   // Helper to build URL with query params
   const buildStatusUrl = (slug: string) => {
     const params = new URLSearchParams();
+    if (selectedSource !== "all") params.set("source", selectedSource);
     if (selectedYear !== "all") params.set("year", selectedYear);
     if (selectedPortfolio !== "all") params.set("portfolio", selectedPortfolio);
     if (selectedCategory !== "all") params.set("category", selectedCategory);
@@ -246,7 +300,7 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div style={{ padding: "0 8px" }}>
-      {/* Filter Bar */}
+      {/* Top Source Mode & Filter Bar */}
       <Card
         size="small"
         style={{
@@ -255,47 +309,75 @@ export const DashboardPage: React.FC = () => {
           border: "1px solid rgba(255,255,255,0.08)",
         }}
       >
-        <Space wrap size="middle">
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 12,
+          }}
+        >
+          {/* Source Overview Segmented Controls */}
           <Space>
-            <Text style={{ color: "#999", fontSize: 13 }}>Year</Text>
-            <Select
-              value={selectedYear}
-              onChange={handleYearChange}
-              style={{ width: 120 }}
+            <Text style={{ color: "#aaa", fontWeight: 600, fontSize: 13 }}>
+              Overview:
+            </Text>
+            <Segmented
+              value={selectedSource}
+              onChange={(val) => handleSourceChange(String(val))}
               options={[
-                { label: "All Years", value: "all" },
-                ...years.map((y) => ({ label: String(y), value: String(y) })),
+                { label: "🌐 All Innovations", value: "all" },
+                { label: "🏛️ Top-Down", value: "topdown" },
+                { label: "💡 Bottom-Up", value: "bottomup" },
               ]}
+              style={{
+                background: "rgba(255,255,255,0.06)",
+                fontWeight: 500,
+              }}
             />
           </Space>
-          <Space>
-            <Text style={{ color: "#999", fontSize: 13 }}>Portfolio</Text>
-            <Select
-              value={selectedPortfolio}
-              onChange={handlePortfolioChange}
-              style={{ width: 130 }}
-              options={[
-                { label: "All", value: "all" },
-                { label: "Core", value: "Core" },
-                { label: "Adjacent", value: "Adjacent" },
-              ]}
-            />
+
+          {/* Slicing Filters */}
+          <Space wrap size="middle">
+            <Space>
+              <Text style={{ color: "#999", fontSize: 13 }}>Year</Text>
+              <Select
+                value={selectedYear}
+                onChange={handleYearChange}
+                style={{ width: 120 }}
+                options={[
+                  { label: "All Years", value: "all" },
+                  ...years.map((y) => ({ label: String(y), value: String(y) })),
+                ]}
+              />
+            </Space>
+            <Space>
+              <Text style={{ color: "#999", fontSize: 13 }}>Portfolio</Text>
+              <Select
+                value={selectedPortfolio}
+                onChange={handlePortfolioChange}
+                style={{ width: 130 }}
+                options={[
+                  { label: "All", value: "all" },
+                  ...availablePortfolios.map((p) => ({ label: p, value: p })),
+                ]}
+              />
+            </Space>
+            <Space>
+              <Text style={{ color: "#999", fontSize: 13 }}>Category</Text>
+              <Select
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+                style={{ width: 130 }}
+                options={[
+                  { label: "All", value: "all" },
+                  ...availableCategories.map((c) => ({ label: c, value: c })),
+                ]}
+              />
+            </Space>
           </Space>
-          <Space>
-            <Text style={{ color: "#999", fontSize: 13 }}>Category</Text>
-            <Select
-              value={selectedCategory}
-              onChange={handleCategoryChange}
-              style={{ width: 130 }}
-              options={[
-                { label: "All", value: "all" },
-                { label: "Service", value: "Service" },
-                { label: "Product", value: "Product" },
-                { label: "Process", value: "Process" },
-              ]}
-            />
-          </Space>
-        </Space>
+        </div>
       </Card>
 
       {/* Summary Cards */}

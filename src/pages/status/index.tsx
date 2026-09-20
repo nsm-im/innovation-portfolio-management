@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useList } from "@refinedev/core";
 import { useParams, useNavigate, useSearchParams } from "react-router";
-import { Card, Table, Tag, Typography, Button, Space, Empty, Select } from "antd";
+import { Card, Table, Tag, Typography, Button, Space, Empty, Select, Segmented } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import type { Innovation } from "../../types";
 import {
@@ -33,6 +33,9 @@ export const StatusListPage: React.FC = () => {
 
   const statusName = SLUG_TO_STATUS[statusSlug ?? ""] ?? statusSlug ?? "";
 
+  const [selectedSource, setSelectedSource] = useState<string>(
+    searchParams.get("source") || "all"
+  );
   const [selectedYear, setSelectedYear] = useState<string>(
     searchParams.get("year") || "all"
   );
@@ -44,10 +47,19 @@ export const StatusListPage: React.FC = () => {
   );
 
   useEffect(() => {
+    setSelectedSource(searchParams.get("source") || "all");
     setSelectedYear(searchParams.get("year") || "all");
     setSelectedPortfolio(searchParams.get("portfolio") || "all");
     setSelectedCategory(searchParams.get("category") || "all");
   }, [searchParams]);
+
+  const handleSourceChange = (source: string) => {
+    setSelectedSource(source);
+    const newParams = new URLSearchParams(searchParams);
+    if (source !== "all") newParams.set("source", source);
+    else newParams.delete("source");
+    setSearchParams(newParams, { replace: true });
+  };
 
   const handleYearChange = (year: string) => {
     setSelectedYear(year);
@@ -78,16 +90,27 @@ export const StatusListPage: React.FC = () => {
     pagination: { mode: "off" },
   });
 
-  const allRecords = useMemo(
+  const rawRecords = useMemo(
     () => (result?.data ?? []) as Innovation[],
     [result]
   );
   const isLoading = query?.isLoading ?? false;
 
+  // Filter records by selected overview source first
+  const allRecords = useMemo(() => {
+    if (selectedSource === "topdown") {
+      return rawRecords.filter((r) => r.source === "top-down");
+    }
+    if (selectedSource === "bottomup") {
+      return rawRecords.filter((r) => r.source === "bottom-up");
+    }
+    return rawRecords;
+  }, [rawRecords, selectedSource]);
+
   // Available years from entire dataset
   const availableYears = useMemo(
-    () => [...new Set(allRecords.map((r) => r.year))].sort(),
-    [allRecords]
+    () => [...new Set(rawRecords.map((r) => r.year))].sort(),
+    [rawRecords]
   );
 
   // Filter records by status AND the selected filters
@@ -112,11 +135,29 @@ export const StatusListPage: React.FC = () => {
       title: "ID",
       dataIndex: "id",
       key: "id",
-      width: "8%",
+      width: "6%",
       render: (id: number) => (
         <Text style={{ color: "#888", fontFamily: "monospace" }}>#{id}</Text>
       ),
     },
+    ...(selectedSource === "all"
+      ? [
+        {
+          title: "Source",
+          dataIndex: "source",
+          key: "source",
+          width: "12%",
+          render: (src: string) => (
+            <Tag
+              color={src === "bottom-up" ? "cyan" : "blue"}
+              style={{ borderRadius: 10, padding: "1px 8px", fontSize: 11 }}
+            >
+              {src === "bottom-up" ? "💡 Bottom-Up" : "🏛️ Top-Down"}
+            </Tag>
+          ),
+        },
+      ]
+      : []),
     {
       title: "Name",
       dataIndex: "name",
@@ -127,7 +168,7 @@ export const StatusListPage: React.FC = () => {
       title: "Year",
       dataIndex: "year",
       key: "year",
-      width: "12%",
+      width: "10%",
       sorter: (a: Innovation, b: Innovation) =>
         a.year - b.year,
       render: (year: number) => (
@@ -228,6 +269,18 @@ export const StatusListPage: React.FC = () => {
         }}
       >
         <Space wrap size="middle">
+          <Space>
+            <Text style={{ color: "#999", fontSize: 13 }}>Source</Text>
+            <Segmented
+              value={selectedSource}
+              onChange={handleSourceChange}
+              options={[
+                { label: "🌐 All", value: "all" },
+                { label: "🏛️ Top-Down", value: "topdown" },
+                { label: "💡 Bottom-Up", value: "bottomup" },
+              ]}
+            />
+          </Space>
           <Space>
             <Text style={{ color: "#999", fontSize: 13 }}>Year</Text>
             <Select

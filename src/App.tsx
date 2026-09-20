@@ -73,8 +73,24 @@ function App() {
                 name: "innovations",
                 list: "/",
                 meta: {
-                  label: " Dashboard",
-                  icon: "📊",
+                  label: " All Innovations",
+                  icon: "🌐",
+                },
+              },
+              {
+                name: "topdown-innovations",
+                list: "/?source=topdown",
+                meta: {
+                  label: " Top-Down",
+                  icon: "🏛️",
+                },
+              },
+              {
+                name: "bottomup-innovations",
+                list: "/?source=bottomup",
+                meta: {
+                  label: " Bottom-Up",
+                  icon: "💡",
                 },
               },
             ]}
