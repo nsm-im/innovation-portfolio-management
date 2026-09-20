@@ -15,17 +15,15 @@ const { Title, Text } = Typography;
 
 // Map URL-safe slug back to actual status name
 const SLUG_TO_STATUS: Record<string, string> = {
-  "strategic-direction": "Strategic Direction",
-  development: "Development",
-  "test-implement": "Test/Implement",
-  launch: "Launch",
+  "in-progress": "In Progress",
+  done: "Done",
+  rejected: "Rejected",
 };
 
 const STATUS_ICONS: Record<string, string> = {
-  "Strategic Direction": "🎯",
-  Development: "⚙️",
-  "Test/Implement": "🧪",
-  Launch: "🚀",
+  "In Progress": "⚙️",
+  Done: "🚀",
+  Rejected: "❌",
 };
 
 export const StatusListPage: React.FC = () => {
@@ -88,7 +86,7 @@ export const StatusListPage: React.FC = () => {
 
   // Available years from entire dataset
   const availableYears = useMemo(
-    () => [...new Set(allRecords.map((r) => r.finished_year))].sort(),
+    () => [...new Set(allRecords.map((r) => r.year))].sort(),
     [allRecords]
   );
 
@@ -96,7 +94,7 @@ export const StatusListPage: React.FC = () => {
   const filteredRecords = useMemo(() => {
     return allRecords.filter((r) => {
       if (r.status !== statusName) return false;
-      if (selectedYear !== "all" && String(r.finished_year) !== selectedYear) return false;
+      if (selectedYear !== "all" && String(r.year) !== selectedYear) return false;
       if (selectedPortfolio !== "all" && r.innovation_management_portfolio !== selectedPortfolio) return false;
       if (selectedCategory !== "all" && r.innovation_category !== selectedCategory) return false;
       return true;
@@ -105,7 +103,7 @@ export const StatusListPage: React.FC = () => {
 
   // Group by year for display
   const years = useMemo(
-    () => [...new Set(filteredRecords.map((r) => r.finished_year))].sort(),
+    () => [...new Set(filteredRecords.map((r) => r.year))].sort(),
     [filteredRecords]
   );
 
@@ -127,11 +125,11 @@ export const StatusListPage: React.FC = () => {
     },
     {
       title: "Year",
-      dataIndex: "finished_year",
-      key: "finished_year",
+      dataIndex: "year",
+      key: "year",
       width: "12%",
       sorter: (a: Innovation, b: Innovation) =>
-        a.finished_year - b.finished_year,
+        a.year - b.year,
       render: (year: number) => (
         <Tag
           style={{
@@ -335,7 +333,7 @@ export const StatusListPage: React.FC = () => {
       ) : (
         years.map((year) => {
           const yearRecords = filteredRecords.filter(
-            (r) => r.finished_year === year
+            (r) => r.year === year
           );
           return (
             <Card

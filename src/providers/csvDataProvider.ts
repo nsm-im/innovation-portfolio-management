@@ -25,7 +25,7 @@ async function fetchCSV(): Promise<Innovation[]> {
     data.push({
       id: parseInt(row["id"], 10),
       name: row["name"],
-      finished_year: parseInt(row["finished_year"], 10),
+      year: parseInt(row["year"] || row["finished_year"], 10),
       status: row["status"] as Innovation["status"],
       innovation_management_portfolio:
         row["innovation_management_portfolio"] as Innovation["innovation_management_portfolio"],

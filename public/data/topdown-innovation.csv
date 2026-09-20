@@ -1,15 +1,15 @@
-id,name,finished_year,status,innovation_management_portfolio,innovation_category
-1,Immersive Science Drama,2566,Launch,Adjacent,Service
-2,การประกวดสิ่งประดิษฐ์ Automata,2566,Launch,Adjacent,Product
-3,NSM AR : ผจญภัย ในตึกลูกเต๋า,2566,Launch,Core,Service
-4,Enjoy Science Careers Platform,2566,Launch,Core,Product
-5,ScIAM META MUSEUM,2567,Launch,Adjacent,Service
-6,GUIDED TOURE,2567,Launch,Adjacent,Service
-7,Module นิทรรศการ Nature Pop and Play,2567,Launch,Adjacent,Product
-8,นิทรรศการ Brain Inside-Out,2568,Launch,Adjacent,Product
-9,นิทรรศการ Automata พระอภัยมณี,2568,Launch,Adjacent,Product
-11,นิทรรศการ SCIENCE SPEAK & SCIENCE SPARK,2568,Launch,Adjacent,Product
-13,ระบบบริหารทรัพยากรองค์กร,2569,Launch,Core,Process
-14,Futurium VR Job World,2569,Development,Core,Service
-15,VR Rescue Bot,2569,Development,Core,Service
-16,Mixed Reality GEO FACTORY,2569,Development,Core,Service
+id,name,year,status,innovation_management_portfolio,innovation_category
+1,Immersive Science Drama,2566,Done,Adjacent,Service
+2,การประกวดสิ่งประดิษฐ์ Automata,2566,Done,Adjacent,Product
+3,NSM AR : ผจญภัย ในตึกลูกเต๋า,2566,Done,Core,Service
+4,Enjoy Science Careers Platform,2566,Done,Core,Product
+5,ScIAM META MUSEUM,2567,Done,Adjacent,Service
+6,GUIDED TOURE,2567,Done,Adjacent,Service
+7,Module นิทรรศการ Nature Pop and Play,2567,Done,Adjacent,Product
+8,นิทรรศการ Brain Inside-Out,2568,Done,Adjacent,Product
+9,นิทรรศการ Automata พระอภัยมณี,2568,Done,Adjacent,Product
+11,นิทรรศการ SCIENCE SPEAK & SCIENCE SPARK,2568,Done,Adjacent,Product
+13,ระบบบริหารทรัพยากรองค์กร,2569,In Progress,Core,Process
+14,Futurium VR Job World,2569,In Progress,Core,Service
+15,VR Rescue Bot,2569,In Progress,Core,Service
+16,Mixed Reality GEO FACTORY,2569,In Progress,Core,Service

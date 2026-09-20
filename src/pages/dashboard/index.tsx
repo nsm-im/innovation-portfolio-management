@@ -80,7 +80,7 @@ export const DashboardPage: React.FC = () => {
   // Apply filters
   const filteredRecords = useMemo(() => {
     return allRecords.filter((record) => {
-      if (selectedYear !== "all" && String(record.finished_year) !== selectedYear)
+      if (selectedYear !== "all" && String(record.year) !== selectedYear)
         return false;
       if (
         selectedPortfolio !== "all" &&
@@ -108,10 +108,10 @@ export const DashboardPage: React.FC = () => {
 
   // Chart data: group by year, stack by status
   const chartData = useMemo(() => {
-    const years = [...new Set(allRecords.map((r) => r.finished_year))].sort();
+    const years = [...new Set(allRecords.map((r) => r.year))].sort();
     return years.map((year) => {
       const yearRecords = filteredRecords.filter(
-        (r) => r.finished_year === year
+        (r) => r.year === year
       );
       const row: Record<string, number | string> = {
         year: String(year),
@@ -127,7 +127,7 @@ export const DashboardPage: React.FC = () => {
 
   // Available years
   const years = useMemo(
-    () => [...new Set(allRecords.map((r) => r.finished_year))].sort(),
+    () => [...new Set(allRecords.map((r) => r.year))].sort(),
     [allRecords]
   );
 
@@ -142,11 +142,11 @@ export const DashboardPage: React.FC = () => {
     },
     {
       title: "Year",
-      dataIndex: "finished_year",
-      key: "finished_year",
+      dataIndex: "year",
+      key: "year",
       width: "10%",
       sorter: (a: Innovation, b: Innovation) =>
-        a.finished_year - b.finished_year,
+        a.year - b.year,
       render: (year: number) => (
         <Tag
           style={{
@@ -222,32 +222,25 @@ export const DashboardPage: React.FC = () => {
 
   const summaryCards = [
     {
-      title: "Strategic Direction",
-      slug: "strategic-direction",
-      count: statusCounts["Strategic Direction"],
-      color: STATUS_COLORS["Strategic Direction"],
-      icon: "🎯",
-    },
-    {
-      title: "Development",
-      slug: "development",
-      count: statusCounts["Development"],
-      color: STATUS_COLORS["Development"],
+      title: "In Progress",
+      slug: "in-progress",
+      count: statusCounts["In Progress"] || 0,
+      color: STATUS_COLORS["In Progress"],
       icon: "⚙️",
     },
     {
-      title: "Test / Implement",
-      slug: "test-implement",
-      count: statusCounts["Test/Implement"],
-      color: STATUS_COLORS["Test/Implement"],
-      icon: "🧪",
+      title: "Done",
+      slug: "done",
+      count: statusCounts["Done"] || 0,
+      color: STATUS_COLORS["Done"],
+      icon: "🚀",
     },
     {
-      title: "Launch",
-      slug: "launch",
-      count: statusCounts["Launch"],
-      color: STATUS_COLORS["Launch"],
-      icon: "🚀",
+      title: "Rejected",
+      slug: "rejected",
+      count: statusCounts["Rejected"] || 0,
+      color: STATUS_COLORS["Rejected"],
+      icon: "❌",
     },
   ];
 
@@ -308,7 +301,7 @@ export const DashboardPage: React.FC = () => {
       {/* Summary Cards */}
       <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
         {summaryCards.map((card) => (
-          <Col xs={12} sm={12} md={6} key={card.title}>
+          <Col xs={24} sm={8} md={8} key={card.title}>
             <Card
               hoverable
               onClick={() => navigate(buildStatusUrl(card.slug))}
@@ -411,14 +404,14 @@ export const DashboardPage: React.FC = () => {
               iconType="circle"
               iconSize={10}
             />
-            {STATUS_ORDER.map((status) => (
+            {STATUS_ORDER.map((status, idx) => (
               <Bar
                 key={status}
                 dataKey={status}
                 stackId="stack"
                 fill={STATUS_COLORS[status]}
                 radius={
-                  status === "Launch" ? [4, 4, 0, 0] : [0, 0, 0, 0]
+                  idx === STATUS_ORDER.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]
                 }
               />
             ))}
