@@ -477,11 +477,12 @@ export const DashboardPage: React.FC = () => {
           border: `1px solid ${token.colorBorder}`,
         }}
       >
-        <div style={{ width: "100%", height: 350 }}>
+        <div style={{ width: "100%", maxWidth: 1200, height: 350 }}>
           <ResponsiveContainer>
             <BarChart
               data={chartData}
               margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+              maxBarSize={44}
             >
               <CartesianGrid
                 strokeDasharray="3 3"
@@ -499,6 +500,7 @@ export const DashboardPage: React.FC = () => {
                 tickFormatter={(val) => chartMode === "%" ? `${val}%` : `${val}`}
               />
               <Tooltip
+                cursor={false}
                 formatter={(value: any, name: any) => [
                   chartMode === "%" ? `${value}%` : `${value} projects`,
                   name,
