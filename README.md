@@ -120,3 +120,11 @@ docker run -d -p 8080:80 --name innovation-portfolio-management innovation-portf
 ```
 
 Open `http://localhost:8080` in your browser.
+
+---
+
+## 🌐 GitHub Pages Deployment
+
+The repository includes a GitHub Actions workflow at `.github/workflows/deploy.yml` to publish the Vite build to GitHub Pages.
+
+For the first deployment, GitHub Pages must already be enabled for the repository in **Settings → Pages** with **Source: GitHub Actions**. The workflow now detects when that one-time repository setup has not been completed yet, skips the deploy step, and prints an actionable notice instead of failing the build.
