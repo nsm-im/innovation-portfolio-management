@@ -52,24 +52,21 @@ const CATEGORY_COLS = [
     aliases: ["Product", "Product Service", "Product/Service"],
     title: "Product",
     subtitle: "New Product & New Business",
-    color: "#F1C40F",
-    textColor: "#1f1f1f",
+    color: "#05a4faff",
   },
   {
     key: "Process",
     aliases: ["Process"],
     title: "Process",
     subtitle: "Process Improvement & Smart Workforce",
-    color: "#9B59B6",
-    textColor: "#ffffff",
+    color: "#255dd7ff",
   },
   {
     key: "Service",
     aliases: ["Service", "Business Model"],
     title: "Service",
     subtitle: "Customer Experience",
-    color: "#E6C7C2",
-    textColor: "#2b2b2b",
+    color: "#0b358eff",
   },
 ];
 
@@ -123,6 +120,13 @@ export const MatrixPage: React.FC = () => {
     [rawRecords]
   );
 
+  // Status ordering for bubbles inside matrix cells: Terminated -> In Progress -> Done
+  const STATUS_PRIORITY: Record<string, number> = {
+    Terminated: 1,
+    "In Progress": 2,
+    Done: 3,
+  };
+
   // Group items by Matrix cell: [portfolioKey][categoryKey]
   const matrixData = useMemo(() => {
     const data: Record<string, Record<string, Innovation[]>> = {};
@@ -156,6 +160,17 @@ export const MatrixPage: React.FC = () => {
       if (data[portfolioMatch.key]?.[categoryMatch.key]) {
         data[portfolioMatch.key][categoryMatch.key].push(item);
       }
+    });
+
+    // Sort items in each cell: Terminated, In Progress, Done
+    PORTFOLIO_ROWS.forEach((p) => {
+      CATEGORY_COLS.forEach((c) => {
+        data[p.key][c.key].sort((a, b) => {
+          const pA = STATUS_PRIORITY[a.status] ?? 99;
+          const pB = STATUS_PRIORITY[b.status] ?? 99;
+          return pA - pB;
+        });
+      });
     });
 
     return data;
@@ -319,38 +334,14 @@ export const MatrixPage: React.FC = () => {
             justifyContent: "space-between",
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-            <span
-              style={{
-                fontSize: 10,
-                color: token.colorTextSecondary,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-              }}
-            >
-              Y: Degree of Innovation
-            </span>
-            <span
-              style={{
-                fontSize: 10,
-                color: token.colorTextSecondary,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-              }}
-            >
-              X: Type of Innovation
-            </span>
-          </div>
-
           {/* Status color legend */}
           <div
             style={{
               display: "flex",
               flexDirection: "column",
               gap: 6,
-              marginTop: 10,
-              paddingTop: 8,
-              borderTop: `1px solid ${token.colorBorderSecondary}`,
+              marginTop: 4,
+              paddingTop: 4,
             }}
           >
             <span
@@ -359,11 +350,24 @@ export const MatrixPage: React.FC = () => {
                 color: token.colorTextSecondary,
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
-                marginBottom: 2,
               }}
             >
-              Status Label:
+              Innovation Status:
             </span>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
+                  backgroundColor: STATUS_COLORS["Terminated"],
+                  boxShadow: `0 0 6px rgba(217, 100, 121, 0.5)`,
+                }}
+              />
+              <span style={{ fontSize: 12, fontWeight: 500, color: token.colorText }}>
+                Terminated
+              </span>
+            </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <div
                 style={{
@@ -392,20 +396,6 @@ export const MatrixPage: React.FC = () => {
                 Done
               </span>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: "50%",
-                  backgroundColor: STATUS_COLORS["Terminated"],
-                  boxShadow: `0 0 6px rgba(217, 100, 121, 0.5)`,
-                }}
-              />
-              <span style={{ fontSize: 12, fontWeight: 500, color: token.colorText }}>
-                Terminated
-              </span>
-            </div>
           </div>
         </div>
 
@@ -417,7 +407,7 @@ export const MatrixPage: React.FC = () => {
               background: col.color,
               borderRadius: 16,
               padding: "16px 14px",
-              color: col.textColor || "#ffffff",
+              color: "#ffffff",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
@@ -427,7 +417,7 @@ export const MatrixPage: React.FC = () => {
               minHeight: 88,
             }}
           >
-            <span style={{ fontWeight: 700, fontSize: 16, lineHeight: 1.3 }}>
+            <span style={{ fontWeight: 700, fontSize: 18, lineHeight: 1.3 }}>
               {col.title}
             </span>
             <span style={{ fontSize: 12, opacity: 0.85, marginTop: 4, lineHeight: 1.3 }}>
@@ -454,7 +444,7 @@ export const MatrixPage: React.FC = () => {
                 boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
               }}
             >
-              <span style={{ fontWeight: 700, fontSize: 16, lineHeight: 1.3 }}>
+              <span style={{ fontWeight: 700, fontSize: 18, lineHeight: 1.3 }}>
                 {row.title}
               </span>
               <span style={{ fontSize: 12, opacity: 0.85, marginTop: 4, lineHeight: 1.3 }}>
@@ -621,7 +611,7 @@ export const MatrixPage: React.FC = () => {
                     <div
                       style={{
                         fontSize: 11,
-                        color: row.color,
+                        color: token.colorTextSecondary,
                         textAlign: "right",
                         fontWeight: 600,
                       }}

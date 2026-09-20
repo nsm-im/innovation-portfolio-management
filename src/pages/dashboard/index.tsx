@@ -16,8 +16,6 @@ import type { Innovation } from "../../types";
 import {
   STATUS_ORDER,
   STATUS_COLORS,
-  PORTFOLIO_COLORS,
-  CATEGORY_COLORS,
 } from "../../types";
 import { useColorMode } from "../../contexts/ThemeContext";
 
