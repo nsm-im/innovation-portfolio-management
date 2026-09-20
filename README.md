@@ -102,3 +102,21 @@ Project data is read directly from CSV files placed under `public/data/`:
 - `public/data/bottom-up-innovation.csv`
 
 When adding or updating records in these CSVs, ensure columns match the structure defined in `src/types/index.ts`.
+
+---
+
+## 🐳 Docker Deployment
+
+A lightweight, multi-stage Docker build is provided using Node.js to compile the static assets and Nginx Alpine to serve them.
+
+### Build and Run with Docker
+
+```bash
+# 1. Build the Docker image
+docker build -t innovation-portfolio-management .
+
+# 2. Run container on port 8080
+docker run -d -p 8080:80 --name innovation-portfolio-management innovation-portfolio-management
+```
+
+Open `http://localhost:8080` in your browser.
