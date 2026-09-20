@@ -219,6 +219,40 @@ export const DashboardPage: React.FC = () => {
       ),
     },
     {
+      title: "Portfolio",
+      dataIndex: "innovation_management_portfolio",
+      key: "portfolio",
+      width: "15%",
+      render: (portfolio: string) => (
+        <Tag
+          style={{
+            background: mode === "dark" ? "rgba(255,255,255,0.06)" : "#f3f4f6",
+            border: `1px solid ${token.colorBorder}`,
+            color: token.colorText,
+          }}
+        >
+          {portfolio}
+        </Tag>
+      ),
+    },
+    {
+      title: "Category",
+      dataIndex: "innovation_category",
+      key: "category",
+      width: "15%",
+      render: (category: string) => (
+        <Tag
+          style={{
+            background: mode === "dark" ? "rgba(255,255,255,0.06)" : "#f3f4f6",
+            border: `1px solid ${token.colorBorder}`,
+            color: token.colorText,
+          }}
+        >
+          {category}
+        </Tag>
+      ),
+    },
+    {
       title: "Status",
       dataIndex: "status",
       key: "status",
@@ -236,34 +270,6 @@ export const DashboardPage: React.FC = () => {
           }}
         >
           {status}
-        </Tag>
-      ),
-    },
-    {
-      title: "Portfolio",
-      dataIndex: "innovation_management_portfolio",
-      key: "portfolio",
-      width: "15%",
-      render: (portfolio: string) => (
-        <Tag
-          color={PORTFOLIO_COLORS[portfolio] || "#888"}
-          style={{ borderRadius: 12, padding: "2px 12px" }}
-        >
-          {portfolio}
-        </Tag>
-      ),
-    },
-    {
-      title: "Category",
-      dataIndex: "innovation_category",
-      key: "category",
-      width: "15%",
-      render: (category: string) => (
-        <Tag
-          color={CATEGORY_COLORS[category] || "#888"}
-          style={{ borderRadius: 12, padding: "2px 12px" }}
-        >
-          {category}
         </Tag>
       ),
     },

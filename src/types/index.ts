@@ -32,7 +32,7 @@ export const PORTFOLIO_COLORS: Record<string, string> = {
 };
 
 export const CATEGORY_COLORS: Record<string, string> = {
-  Service: "#ec4899",
-  Product: "#8b5cf6",
-  Process: "#14b8a6",
+  Product: "#F1C40F",
+  Process: "#9B59B6",
+  Service: "#E6C7C2",
 };
