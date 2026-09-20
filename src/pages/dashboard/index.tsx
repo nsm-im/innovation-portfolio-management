@@ -16,8 +16,6 @@ import type { Innovation } from "../../types";
 import {
   STATUS_ORDER,
   STATUS_COLORS,
-  PORTFOLIO_COLORS,
-  CATEGORY_COLORS,
 } from "../../types";
 import { useColorMode } from "../../contexts/ThemeContext";
 
@@ -180,21 +178,24 @@ export const DashboardPage: React.FC = () => {
     },
     ...(selectedSource === "all"
       ? [
-          {
-            title: "Source",
-            dataIndex: "source",
-            key: "source",
-            width: "12%",
-            render: (src: string) => (
-              <Tag
-                color={src === "top-down" ? "#e67e22" : "#3b82f6"}
-                style={{ borderRadius: 12, padding: "2px 10px" }}
-              >
-                {src === "top-down" ? "🏛️ Top-Down" : "💡 Bottom-Up"}
-              </Tag>
-            ),
-          },
-        ]
+        {
+          title: "Source",
+          dataIndex: "source",
+          key: "source",
+          width: "12%",
+          render: (src: string) => (
+            <Tag
+              style={{
+                background: mode === "dark" ? "rgba(255,255,255,0.06)" : "#f3f4f6",
+                border: `1px solid ${token.colorBorder}`,
+                color: token.colorText,
+              }}
+            >
+              {src === "top-down" ? "🏛️ Top-Down" : "💡 Bottom-Up"}
+            </Tag>
+          ),
+        },
+      ]
       : []),
     {
       title: "Year",
@@ -212,6 +213,40 @@ export const DashboardPage: React.FC = () => {
           }}
         >
           {year}
+        </Tag>
+      ),
+    },
+    {
+      title: "Portfolio",
+      dataIndex: "innovation_management_portfolio",
+      key: "portfolio",
+      width: "15%",
+      render: (portfolio: string) => (
+        <Tag
+          style={{
+            background: mode === "dark" ? "rgba(255,255,255,0.06)" : "#f3f4f6",
+            border: `1px solid ${token.colorBorder}`,
+            color: token.colorText,
+          }}
+        >
+          {portfolio}
+        </Tag>
+      ),
+    },
+    {
+      title: "Category",
+      dataIndex: "innovation_category",
+      key: "category",
+      width: "15%",
+      render: (category: string) => (
+        <Tag
+          style={{
+            background: mode === "dark" ? "rgba(255,255,255,0.06)" : "#f3f4f6",
+            border: `1px solid ${token.colorBorder}`,
+            color: token.colorText,
+          }}
+        >
+          {category}
         </Tag>
       ),
     },
@@ -236,34 +271,6 @@ export const DashboardPage: React.FC = () => {
         </Tag>
       ),
     },
-    {
-      title: "Portfolio",
-      dataIndex: "innovation_management_portfolio",
-      key: "portfolio",
-      width: "15%",
-      render: (portfolio: string) => (
-        <Tag
-          color={PORTFOLIO_COLORS[portfolio] || "#888"}
-          style={{ borderRadius: 12, padding: "2px 12px" }}
-        >
-          {portfolio}
-        </Tag>
-      ),
-    },
-    {
-      title: "Category",
-      dataIndex: "innovation_category",
-      key: "category",
-      width: "15%",
-      render: (category: string) => (
-        <Tag
-          color={CATEGORY_COLORS[category] || "#888"}
-          style={{ borderRadius: 12, padding: "2px 12px" }}
-        >
-          {category}
-        </Tag>
-      ),
-    },
   ];
 
   // Helper to build URL with query params
@@ -279,11 +286,20 @@ export const DashboardPage: React.FC = () => {
 
   const summaryCards = [
     {
+      title: "Total Innovations",
+      slug: "all",
+      count: filteredRecords.length,
+      color: token.colorPrimary,
+      icon: "📊",
+      isTotal: true,
+    },
+    {
       title: "In Progress",
       slug: "in-progress",
       count: statusCounts["In Progress"] || 0,
       color: STATUS_COLORS["In Progress"],
       icon: "⚙️",
+      isTotal: false,
     },
     {
       title: "Done",
@@ -291,13 +307,15 @@ export const DashboardPage: React.FC = () => {
       count: statusCounts["Done"] || 0,
       color: STATUS_COLORS["Done"],
       icon: "🚀",
+      isTotal: false,
     },
     {
-      title: "Rejected",
-      slug: "rejected",
-      count: statusCounts["Rejected"] || 0,
-      color: STATUS_COLORS["Rejected"],
+      title: "Terminated",
+      slug: "terminated",
+      count: statusCounts["Terminated"] || 0,
+      color: STATUS_COLORS["Terminated"],
       icon: "❌",
+      isTotal: false,
     },
   ];
 
@@ -323,7 +341,7 @@ export const DashboardPage: React.FC = () => {
         >
           {/* Source Overview Segmented Controls */}
           <Space>
-            <Text style={{ color: "#aaa", fontWeight: 600, fontSize: 13 }}>
+            <Text style={{ color: token.colorTextSecondary, fontWeight: 600, fontSize: 13 }}>
               Overview:
             </Text>
             <Segmented
@@ -335,7 +353,7 @@ export const DashboardPage: React.FC = () => {
                 { label: "💡 Bottom-Up", value: "bottomup" },
               ]}
               style={{
-                background: "rgba(255,255,255,0.06)",
+                background: mode === "dark" ? "rgba(255,255,255,0.06)" : "#f3f4f6",
                 fontWeight: 500,
               }}
             />
@@ -344,7 +362,7 @@ export const DashboardPage: React.FC = () => {
           {/* Slicing Filters */}
           <Space wrap size="middle">
             <Space>
-              <Text style={{ color: "#999", fontSize: 13 }}>Year</Text>
+              <Text style={{ color: token.colorTextSecondary, fontSize: 13 }}>Year</Text>
               <Select
                 value={selectedYear}
                 onChange={handleYearChange}
@@ -356,7 +374,7 @@ export const DashboardPage: React.FC = () => {
               />
             </Space>
             <Space>
-              <Text style={{ color: "#999", fontSize: 13 }}>Portfolio</Text>
+              <Text style={{ color: token.colorTextSecondary, fontSize: 13 }}>Portfolio</Text>
               <Select
                 value={selectedPortfolio}
                 onChange={handlePortfolioChange}
@@ -368,7 +386,7 @@ export const DashboardPage: React.FC = () => {
               />
             </Space>
             <Space>
-              <Text style={{ color: "#999", fontSize: 13 }}>Category</Text>
+              <Text style={{ color: token.colorTextSecondary, fontSize: 13 }}>Category</Text>
               <Select
                 value={selectedCategory}
                 onChange={handleCategoryChange}
@@ -386,16 +404,20 @@ export const DashboardPage: React.FC = () => {
       {/* Summary Cards */}
       <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
         {summaryCards.map((card) => (
-          <Col xs={24} sm={8} md={8} key={card.title}>
+          <Col xs={24} sm={12} md={6} key={card.title}>
             <Card
               hoverable
-              onClick={() => navigate(buildStatusUrl(card.slug))}
+              onClick={() => {
+                if (!card.isTotal) {
+                  navigate(buildStatusUrl(card.slug));
+                }
+              }}
               style={{
                 background: token.colorBgContainer,
                 border: `1px solid ${token.colorBorder}`,
                 borderLeft: `4px solid ${card.color}`,
                 transition: "all 0.3s ease",
-                cursor: "pointer",
+                cursor: card.isTotal ? "default" : "pointer",
               }}
               styles={{
                 body: { padding: "16px 20px" },
@@ -403,8 +425,9 @@ export const DashboardPage: React.FC = () => {
             >
               <Text
                 style={{
-                  color: "#888",
-                  fontSize: 12,
+                  color: token.colorTextSecondary,
+                  fontSize: 14,
+                  fontWeight: 600,
                   textTransform: "uppercase",
                   letterSpacing: 1,
                 }}
@@ -451,8 +474,8 @@ export const DashboardPage: React.FC = () => {
           body: { padding: "16px 16px 8px" },
         }}
       >
-        <ResponsiveContainer width="100%" height={320}>
-          <BarChart data={chartData} barCategoryGap="25%">
+        <ResponsiveContainer width="100%" height={260}>
+          <BarChart data={chartData} barCategoryGap="20%" maxBarSize={56}>
             <CartesianGrid
               strokeDasharray="3 3"
               stroke={mode === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)"}

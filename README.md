@@ -7,7 +7,7 @@ An interactive dashboard application built with **React 19**, **Refine**, **Ant 
 ## 🌟 Features
 
 - **Multi-Source Data Filtering**: Switch seamlessly between **Top-Down** and **Bottom-Up** initiatives or view all projects combined.
-- **Status Pipeline Tracking**: Real-time project counts grouped into *In Progress*, *Done*, and *Rejected*.
+- **Status Pipeline Tracking**: Real-time project counts grouped into *In Progress*, *Done*, and *Terminated*.
 - **Interactive Visualizations**: Stage breakdown by portfolio and category powered by Recharts.
 - **Deep-linking & Preserved State**: Year, portfolio, category, and source filters persist in the URL for shareable views.
 - **Dark Mode UI**: Clean dark theme customized with Ant Design.
