@@ -32,8 +32,11 @@ jobs:
               core.info(`GitHub Pages is configured for ${data.html_url ?? `${owner}/${repo}`}.`);
               core.setOutput('enabled', 'true');
             } catch (error) {
-              if (error.status === 404) {
-                core.warning('GitHub Pages is not enabled for this repository yet. Enable Settings > Pages with the GitHub Actions source, then rerun this workflow.');
+              if (error.status === 403 || error.status === 404) {
+                const reason = error.status === 404
+                  ? 'GitHub Pages is not enabled for this repository yet.'
+                  : 'This workflow token cannot inspect or enable the repository Pages site.';
+                core.warning(`${reason} Enable Settings > Pages with the GitHub Actions source, then rerun this workflow.`);
                 core.setOutput('enabled', 'false');
                 return;
               }
