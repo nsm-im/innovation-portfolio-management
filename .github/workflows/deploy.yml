@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       enabled: ${{ steps.pages-site.outputs.enabled }}
+      notice: ${{ steps.pages-site.outputs.notice }}
     steps:
       - name: Check GitHub Pages configuration
         id: pages-site
@@ -32,11 +33,18 @@ jobs:
               core.info(`GitHub Pages is configured for ${data.html_url ?? `${owner}/${repo}`}.`);
               core.setOutput('enabled', 'true');
             } catch (error) {
-              if (error.status === 403 || error.status === 404) {
-                const reason = error.status === 404
-                  ? 'GitHub Pages is not enabled for this repository yet.'
-                  : 'This workflow token cannot inspect or enable the repository Pages site.';
-                core.warning(`${reason} Enable Settings > Pages with the GitHub Actions source, then rerun this workflow.`);
+              if (error.status === 404) {
+                const notice = 'GitHub Pages is not enabled for this repository yet. Enable Settings > Pages with the GitHub Actions source, then rerun this workflow.';
+                core.warning(notice);
+                core.setOutput('notice', notice);
+                core.setOutput('enabled', 'false');
+                return;
+              }
+
+              if (error.status === 403 && error.message?.includes('Resource not accessible by integration')) {
+                const notice = 'This workflow token cannot inspect or enable the repository Pages site. Enable Settings > Pages with the GitHub Actions source, then rerun this workflow.';
+                core.warning(notice);
+                core.setOutput('notice', notice);
                 core.setOutput('enabled', 'false');
                 return;
               }
@@ -87,4 +95,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: GitHub Pages setup required
-        run: echo "::notice::GitHub Pages deployment was skipped because the repository Pages site has not been enabled yet."
+        run: echo "::notice::${{ needs.check-pages.outputs.notice }}"
