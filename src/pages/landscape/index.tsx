@@ -596,7 +596,7 @@ export const LandscapePage: React.FC = () => {
                 letterSpacing="0.15em"
                 textAnchor="middle"
               >
-                MARKETS ➔
+                CUSTOMERS & MARKETS ➔
               </text>
             </g>
 
@@ -692,7 +692,8 @@ export const LandscapePage: React.FC = () => {
                 letterSpacing="0.15em"
                 textAnchor="middle"
               >
-                PRODUCTS ➔
+                TECHNOLOGIES ➔
+
               </text>
             </g>
 
