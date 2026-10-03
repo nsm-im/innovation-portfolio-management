@@ -6,6 +6,7 @@ import { ConfigProvider, App as AntdApp } from "antd";
 import { DashboardPage } from "./pages/dashboard";
 import { StatusListPage } from "./pages/status";
 import { MatrixPage } from "./pages/matrix";
+import { LandscapePage } from "./pages/landscape";
 import { csvDataProvider } from "./providers/csvDataProvider";
 import { ThemeProvider, useColorMode } from "./contexts/ThemeContext";
 import { darkTheme, lightTheme } from "./theme/themeConfig";
@@ -41,6 +42,14 @@ const ThemedAppContent: React.FC = () => {
                 icon: "🎯",
               },
             },
+            {
+              name: "landscape",
+              list: "/landscape",
+              meta: {
+                label: " Portfolio Landscape",
+                icon: "🗺️",
+              },
+            },
           ]}
           options={{
             syncWithLocation: true,
@@ -66,6 +75,8 @@ const ThemedAppContent: React.FC = () => {
             >
               <Route index element={<DashboardPage />} />
               <Route path="/matrix" element={<MatrixPage />} />
+              <Route path="/landscape" element={<LandscapePage />} />
+              <Route path="/ambition" element={<LandscapePage />} />
               <Route path="/status/:status" element={<StatusListPage />} />
             </Route>
           </Routes>
