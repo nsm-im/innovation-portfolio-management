@@ -78,8 +78,8 @@ function getRadialPosition(
   total: number,
   rMin: number,
   rMax: number,
-  width: number,
-  height: number,
+  _width: number,
+  _height: number,
   offsetX: number,
   offsetY: number
 ) {
@@ -195,12 +195,6 @@ export const LandscapePage: React.FC = () => {
   const rCore = 220;
   const rAdjacent = 390;
   const rTransform = 570;
-
-  // Path generator for quadrant arcs from theta = pi/2 (up) to theta = 0 (right)
-  const makeArcPath = (r: number) => {
-    // Start at top on Y-axis (offsetX, offsetY - r), sweep down to X-axis (offsetX + r, offsetY)
-    return `M ${offsetX} ${offsetY - r} A ${r} ${r} 0 0 1 ${offsetX + r} ${offsetY}`;
-  };
 
   const tableColumns = [
     {
