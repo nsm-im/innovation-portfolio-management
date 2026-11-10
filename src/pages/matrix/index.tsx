@@ -235,6 +235,10 @@ export const MatrixPage: React.FC = () => {
 
   return (
     <div style={{ padding: "0 8px 32px" }}>
+      <style>{`
+        .matrix-dot { transition: transform 0.15s ease; }
+        .matrix-dot:hover { transform: scale(1.4); }
+      `}</style>
       {/* Top Header Card */}
       <div style={{ marginBottom: 20 }}>
         <Title level={2} style={{ margin: 0, fontWeight: 700 }}>
@@ -567,7 +571,7 @@ export const MatrixPage: React.FC = () => {
                           STATUS_COLORS[item.status] || row.color;
                         return (
                           <Tooltip
-                            key={item.id || idx}
+                            key={`${item.source}-${item.id}-${idx}`}
                             title={`${item.name} (${item.year}) - ${item.status}`}
                           >
                             <div
@@ -579,7 +583,6 @@ export const MatrixPage: React.FC = () => {
                                 boxShadow: dotColor.startsWith("rgb")
                                   ? dotColor.replace("rgb", "rgba").replace(")", ", 0.5)")
                                   : `0 0 8px ${dotColor}80`,
-                                transition: "transform 0.15s ease",
                                 cursor: "pointer",
                               }}
                               onMouseEnter={(e) =>
@@ -650,7 +653,7 @@ export const MatrixPage: React.FC = () => {
             <Table
               dataSource={selectedCell.items}
               columns={tableColumns}
-              rowKey="id"
+              rowKey={(r) => `${r.source}-${r.id}`}
               pagination={{ pageSize: 8 }}
               size="middle"
             />

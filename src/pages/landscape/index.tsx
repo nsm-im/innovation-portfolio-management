@@ -1089,7 +1089,7 @@ export const LandscapePage: React.FC = () => {
             <Table
               dataSource={groupedData[inspectedZone.key] || []}
               columns={tableColumns}
-              rowKey="id"
+              rowKey={(r) => `${r.source}-${r.id}`}
               pagination={{ pageSize: 8 }}
               size="small"
               onRow={(record) => ({
