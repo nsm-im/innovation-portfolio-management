@@ -305,11 +305,11 @@ export const DashboardPage: React.FC = () => {
       isTotal: false,
     },
     {
-      title: "Explore",
-      slug: "explore",
-      count: statusCounts["Explore"] || 0,
-      color: STATUS_COLORS["Explore"],
-      icon: "🔍",
+      title: "Terminated",
+      slug: "terminated",
+      count: statusCounts["Terminated"] || 0,
+      color: STATUS_COLORS["Terminated"],
+      icon: "❌",
       isTotal: false,
     },
   ];

@@ -9,7 +9,7 @@ id,name,year,status,innovation_management_portfolio,innovation_category
 8,นิทรรศการ Brain Inside-Out,2568,Done,Adjacent,Product
 9,นิทรรศการ Automata พระอภัยมณี,2568,Done,Adjacent,Product
 11,นิทรรศการ SCIENCE SPEAK & SCIENCE SPARK,2568,Done,Adjacent,Product
-13,ระบบบริหารทรัพยากรองค์กร,2569,In Progress,Core,Process
-14,Futurium VR Job World,2569,In Progress,Core,Service
-15,VR Rescue Bot,2569,In Progress,Core,Service
-16,Mixed Reality GEO FACTORY,2569,In Progress,Core,Service
+13,ระบบบริหารทรัพยากรองค์กร,2569,Done,Core,Process
+14,Futurium VR Job World,2569,Done,Core,Service
+15,VR Rescue Bot,2569,Done,Core,Service
+16,Mixed Reality GEO FACTORY,2569,Done,Core,Service
